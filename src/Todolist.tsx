@@ -1,5 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 import {filterValueType} from "./App";
+import {Button} from "./Button";
 
 export type TaskType = {
     id: string
@@ -32,9 +33,8 @@ export function Todolist(props: PropsType) {
         }
     }
 
-    const onAllOnClick = () => props.filerTask('All')
-    const onActiveOnClick = () => props.filerTask('Active')
-    const onCompletedOnClick = () => props.filerTask('Completed')
+    const onClickFilterHandler = (nameButton: filterValueType) => props.filerTask(nameButton)
+    const onClickRemoveTaskHandler = (taskId: string) => props.removeTask(taskId)
 
     return (
         <div>
@@ -44,24 +44,24 @@ export function Todolist(props: PropsType) {
                        onChange={onChangeHandler}
                        onKeyPress={onKeyPressHandler}
                 />
-                <button onClick={addTaskHandler}>+</button>
+                <Button title={'+'} callback={addTaskHandler}/>
             </div>
             <ul>
                 {props.tasks.map((task) => {
-                    const onClickHandler = () => props.removeTask(task.id)
+
                     return (
                         <li key={task.id}>
                             <input type="checkbox" checked={task.isDone}/>
                             <span>{task.title}</span>
-                            <button onClick={onClickHandler}>✖️</button>
+                            <Button title={'✖️'} callback={()=>onClickRemoveTaskHandler(task.id)}/>
                         </li>
                     )
                 })}
             </ul>
             <div>
-                <button onClick={onAllOnClick}>All</button>
-                <button onClick={onActiveOnClick}>Active</button>
-                <button onClick={onCompletedOnClick}>Completed</button>
+                <Button title={'All'} callback={()=>onClickFilterHandler('All')}/>
+                <Button title={'Active'} callback={()=>onClickFilterHandler('Active')}/>
+                <Button title={'Completed'} callback={()=>onClickFilterHandler('Completed')}/>
             </div>
         </div>
     )
