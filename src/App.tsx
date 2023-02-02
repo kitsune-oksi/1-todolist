@@ -48,8 +48,14 @@ function App() {
 
     return (
         <div className="App">
-            <Todolist title='What to learn' tasks={tasksForToDoList} removeTask={removeTask} filerTask={changeFiler}
-                      addTask={addTask} changeTaskStatus={changeTaskStatus}/>
+            <Todolist title='What to learn'
+                      tasks={tasksForToDoList}
+                      removeTask={removeTask}
+                      filerTask={changeFiler}
+                      addTask={addTask}
+                      changeTaskStatus={changeTaskStatus}
+                      filter={filter}
+            />
         </div>
     );
 }
