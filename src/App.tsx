@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { v1 } from 'uuid';
+import {v1} from 'uuid';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 
@@ -37,9 +37,19 @@ function App() {
         setTasks(newTasks);
     }
 
+    const changeTaskStatus = (id: string, isDone: boolean) => {
+        let task = tasks.find(t => t.id === id)
+        if (task) {
+            task.isDone = isDone;
+            console.log(task)
+            setTasks([...tasks])
+        }
+    }
+
     return (
         <div className="App">
-            <Todolist title='What to learn' tasks={tasksForToDoList} removeTask={removeTask} filerTask={changeFiler} addTask={addTask}/>
+            <Todolist title='What to learn' tasks={tasksForToDoList} removeTask={removeTask} filerTask={changeFiler}
+                      addTask={addTask} changeTaskStatus={changeTaskStatus}/>
         </div>
     );
 }
