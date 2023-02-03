@@ -22,9 +22,9 @@ function App() {
     let tasksForToDoList = tasks;
 
     if (filter === 'Active') {
-        tasksForToDoList = tasks.filter((task) => task.isDone)
-    } else if (filter === 'Completed') {
         tasksForToDoList = tasks.filter((task) => !task.isDone)
+    } else if (filter === 'Completed') {
+        tasksForToDoList = tasks.filter((task) => task.isDone)
     }
 
     const changeFiler = (value: filterValueType) => {
@@ -38,12 +38,13 @@ function App() {
     }
 
     const changeTaskStatus = (id: string, isDone: boolean) => {
-        let task = tasks.find(t => t.id === id)
-        if (task) {
-            task.isDone = isDone;
-            console.log(task)
-            setTasks([...tasks])
-        }
+        // let task = tasks.find(t => t.id === id)
+        // if (task) {
+        //     task.isDone = isDone;
+        //     console.log(task)
+        //     setTasks([...tasks])
+        // }
+        setTasks(tasks.map(el => el.id === id ? {...el, isDone: isDone} : el))
     }
 
     return (
