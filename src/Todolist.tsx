@@ -60,8 +60,11 @@ export function Todolist(props: PropsType) {
 
     return (
         <div>
-            <Button title={'✖️'} callback={()=>props.removeTodoList(props.id)}/>
-            <h3>{props.title}</h3>
+
+            <h3>
+                {props.title}
+                <Button title={'✖️'} callback={()=>props.removeTodoList(props.id)}/>
+            </h3>
             <div>
                 <input value={title}
                        onChange={onChangeInputHandler}
