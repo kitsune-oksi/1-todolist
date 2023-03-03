@@ -1,7 +1,8 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React, {ChangeEvent} from 'react';
 import {FilterValueType} from "./App";
 import {Button} from "./Button";
 import './App.css';
+import {AddItemForm} from "./AddItemForm";
 
 export type TaskType = {
     id: string
@@ -26,26 +27,9 @@ const ACTIVE = "Active";
 const COMPLETED = "Completed"
 
 export function Todolist(props: PropsType) {
-    const [title, setTitle] = useState('')
-    const [error, setError] = useState<string | null>(null)
 
-    const addTaskHandler = () => {
-        const newTitle = title.trim()
-        if (newTitle) {
-            props.addTask(title, props.id)
-            setTitle('')
-        } else {
-            setError('Title is required!')
-        }
-    }
-
-    const onChangeInputHandler = (event: ChangeEvent<HTMLInputElement>) => setTitle(event.currentTarget.value)
-
-    const onKeyPressHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            addTaskHandler()
-        }
-        setError(null)
+    const addTask = (title:string) => {
+        props.addTask(title, props.id)
     }
 
     const onClickFilterHandler = (nameButton: FilterValueType) => {
@@ -65,15 +49,7 @@ export function Todolist(props: PropsType) {
                 {props.title}
                 <Button title={'✖️'} callback={()=>props.removeTodoList(props.id)}/>
             </h3>
-            <div>
-                <input value={title}
-                       onChange={onChangeInputHandler}
-                       onKeyDown={onKeyPressHandler}
-                       className={error ? 'error' : ''}
-                />
-                <Button title={'+'} callback={addTaskHandler}/>
-                {error && <div className='error-message'>{error}</div>}
-            </div>
+            <AddItemForm addItem={addTask}/>
             <ul>
                 {props.tasks.map((task) => {
                     const {id, isDone, title} = task;
@@ -97,3 +73,4 @@ export function Todolist(props: PropsType) {
         </div>
     )
 }
+
