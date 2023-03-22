@@ -1,5 +1,10 @@
-import {AppBar, Box, Button, IconButton, Toolbar, Typography} from "@mui/material";
-import {Menu} from "@mui/icons-material";
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import MenuIcon from '@mui/icons-material/Menu';
 import React from "react";
 
 export function Header() {
@@ -13,7 +18,7 @@ export function Header() {
                     aria-label="menu"
                     sx={{mr: 2}}
                 >
-                    <Menu/>
+                    <MenuIcon/>
                 </IconButton>
                 <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                     Todolist

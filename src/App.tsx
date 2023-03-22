@@ -3,7 +3,9 @@ import {v1} from 'uuid';
 import './App.css';
 import {TaskType, Todolist} from "./Todolist";
 import {AddItemForm} from "./AddItemForm";
-import {Container, Grid, Paper} from "@mui/material";
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 import {Header} from "./Header";
 
 export type FilterValueType = 'All' | 'Active' | 'Completed'

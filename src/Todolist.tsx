@@ -3,8 +3,10 @@ import {FilterValueType} from "./App";
 import './App.css';
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import {Button, Checkbox, IconButton} from "@mui/material";
-import { Delete } from '@mui/icons-material'
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export type TaskType = {
     id: string
@@ -55,7 +57,7 @@ export function Todolist(props: PropsType) {
             <h3>
                 <EditableSpan value={props.title} onChange={changeTodoListTitleCallback}/>
                 <IconButton aria-label="delete" onClick={()=>props.removeTodoList(props.id)}>
-                    <Delete />
+                    <DeleteIcon />
                 </IconButton>
             </h3>
             <AddItemForm addItem={addTask}/>
@@ -73,7 +75,7 @@ export function Todolist(props: PropsType) {
                             />
                             <EditableSpan value={title} onChange={changeTitleTaskCallback}/>
                             <IconButton aria-label="delete" onClick={() => onClickRemoveTaskHandler(id)}>
-                                <Delete />
+                                <DeleteIcon />
                             </IconButton>
                         </li>
                     )
