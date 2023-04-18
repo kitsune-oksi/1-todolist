@@ -10,7 +10,7 @@ import {Header} from "./Header";
 
 export type FilterValueType = 'All' | 'Active' | 'Completed'
 
-type TodoListsType = {
+export type TodoListsType = {
     id: string
     title: string
     filter: FilterValueType
