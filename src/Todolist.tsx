@@ -1,5 +1,4 @@
 import React, {ChangeEvent} from 'react';
-import {FilterValueType} from "./App";
 import './App.css';
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
@@ -7,12 +6,8 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+import {TaskType} from "./state/tasks-reducer";
+import { FilterValueType } from './state/todolists-reducer';
 
 type PropsType = {
     id: string
