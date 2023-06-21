@@ -43,7 +43,7 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
                        helperText={error}
             />
             <IconButton color="primary" aria-label="add a task" onClick={addItem}>
-                <AddBoxIcon />
+                <AddBoxIcon/>
             </IconButton>
         </div>
     )

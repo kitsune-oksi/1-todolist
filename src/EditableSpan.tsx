@@ -1,18 +1,29 @@
 import React, {ChangeEvent, useState} from 'react';
 import TextField from '@mui/material/TextField';
+import {changeTaskTitleAC} from "./state/tasks-reducer";
+import {useDispatch} from "react-redux";
+import {changeTodoListTitleAC} from "./state/todolists-reducer";
 
 type EditableSpanPropsType = {
     value: string
-    onChange: (newValue: string)=> void
+    taskId?: string
+    todolistId: string
 }
 
 export const EditableSpan = (props: EditableSpanPropsType) => {
     const [editMode, setEditMode] = useState<boolean>(false);
     const [title, setTitle] = useState<string>(props.value);
 
+    const dispatch = useDispatch();
+
     const activateEditMode = () => {
         setEditMode(!editMode)
-        props.onChange(title)
+        if (props.taskId) {
+            dispatch(changeTaskTitleAC(title, props.taskId, props.todolistId))
+        } else {
+            dispatch(changeTodoListTitleAC(title, props.todolistId))
+        }
+
     }
 
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
