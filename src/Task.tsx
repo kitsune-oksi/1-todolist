@@ -2,7 +2,7 @@ import Checkbox from "@mui/material/Checkbox";
 import {EditableSpan} from "./EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import  {FC,ChangeEvent, useCallback} from "react";
+import React, {FC,ChangeEvent, useCallback} from "react";
 import {changeTaskStatusAC, removeTaskAC, TaskType} from "./state/tasks-reducer";
 import {useDispatch,} from "react-redux";
 
@@ -11,17 +11,17 @@ type TaskProps = {
     tasks: Array<TaskType>
 }
 
-export const Task:FC<TaskProps> = ({todolistId,tasks}) => {
+export const Task:FC<TaskProps> = React.memo(({todolistId,tasks}) => {
     const dispatch = useDispatch();
 
-    const onChangeCheckboxHandler = (e: ChangeEvent<HTMLInputElement>, taskId: string) => {
+    const onChangeCheckboxHandler = useCallback((e: ChangeEvent<HTMLInputElement>, taskId: string) => {
         let newIsDoneValue = e.currentTarget.checked
         dispatch(changeTaskStatusAC(taskId, newIsDoneValue, todolistId))
-    }
+    },[todolistId])
 
     const onClickRemoveTaskHandler = useCallback((taskId: string) => {
         dispatch(removeTaskAC(taskId, todolistId))
-    }, [])
+    }, [todolistId])
 
     return <>
         {tasks.map((task) => {
@@ -41,4 +41,4 @@ export const Task:FC<TaskProps> = ({todolistId,tasks}) => {
         })}
     </>
 
-}
+})

@@ -2,7 +2,7 @@ import React, {useCallback} from 'react';
 import './App.css';
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import Button from '@mui/material/Button';
+import Button, {ButtonProps} from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {addTaskAC, TaskType} from "./state/tasks-reducer";
@@ -11,7 +11,7 @@ import {
     FilterValueType,
     removeTodoListAC
 } from './state/todolists-reducer';
-import { Task } from './Task';
+import {Task} from './Task';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
 
@@ -46,38 +46,49 @@ export const Todolist = React.memo((props: PropsType) => {
 
     const addTask = useCallback((title: string) => {
         dispatch(addTaskAC(title, props.id))
-    }, [])
+    }, [props.id])
 
     return (
         <div>
             <h3>
                 <EditableSpan value={props.title} todolistId={props.id}/>
-                <IconButton aria-label="delete" onClick={()=>removeTodoListHandler(props.id)}>
-                    <DeleteIcon />
+                <IconButton aria-label="delete" onClick={() => removeTodoListHandler(props.id)}>
+                    <DeleteIcon/>
                 </IconButton>
             </h3>
             <AddItemForm addItem={addTask}/>
             <ul style={{listStyleType: "none"}}>
-                <Task todolistId = {props.id} tasks={tasks}/>
+                <Task todolistId={props.id} tasks={tasks}/>
             </ul>
             <div>
-                <Button
+                <ButtonWithMemo
                     onClick={() => onClickFilterHandler(ALL)}
                     variant={props.filter === ALL ? 'outlined' : 'text'}
                     color={"inherit"}
-                >{ALL}</Button>
-                <Button
+                    title={ALL}
+                />
+                <ButtonWithMemo
                     onClick={() => onClickFilterHandler(ACTIVE)}
                     variant={props.filter === ACTIVE ? 'outlined' : 'text'}
                     color={"primary"}
-                >{ACTIVE}</Button>
-                <Button
+                    title={ACTIVE}
+                />
+                <ButtonWithMemo
                     onClick={() => onClickFilterHandler(COMPLETED)}
                     variant={props.filter === COMPLETED ? 'outlined' : 'text'}
                     color={"secondary"}
-                >{COMPLETED}</Button>
+                    title={COMPLETED}
+                />
             </div>
         </div>
     )
+})
+
+const ButtonWithMemo: React.FC<ButtonProps> = React.memo(({onClick, variant, color, title}) => {
+    return <Button onClick={onClick}
+                   variant={variant}
+                   color={color}>
+        {title}
+    </Button>
 })
 
