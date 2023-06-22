@@ -58,23 +58,25 @@ export const Todolist = React.memo((props: PropsType) => {
             </h3>
             <AddItemForm addItem={addTask}/>
             <ul style={{listStyleType: "none"}}>
-                <Task todolistId={props.id} tasks={tasks}/>
+                {tasks.map(task => {
+                    return <Task key={task.id} task={task} todolistId={props.id}/>
+                })}
             </ul>
             <div>
                 <ButtonWithMemo
-                    onClick={() => onClickFilterHandler(ALL)}
+                    onClick={useCallback(() => onClickFilterHandler(ALL),[])}
                     variant={props.filter === ALL ? 'outlined' : 'text'}
                     color={"inherit"}
                     title={ALL}
                 />
                 <ButtonWithMemo
-                    onClick={() => onClickFilterHandler(ACTIVE)}
+                    onClick={useCallback(() => onClickFilterHandler(ACTIVE),[])}
                     variant={props.filter === ACTIVE ? 'outlined' : 'text'}
                     color={"primary"}
                     title={ACTIVE}
                 />
                 <ButtonWithMemo
-                    onClick={() => onClickFilterHandler(COMPLETED)}
+                    onClick={useCallback(() => onClickFilterHandler(COMPLETED),[])}
                     variant={props.filter === COMPLETED ? 'outlined' : 'text'}
                     color={"secondary"}
                     title={COMPLETED}
