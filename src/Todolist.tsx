@@ -1,99 +1,96 @@
-import React, {ChangeEvent} from 'react';
+import React, {useCallback} from 'react';
 import './App.css';
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
+import Button, {ButtonProps} from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {TaskType} from "./state/tasks-reducer";
-import { FilterValueType } from './state/todolists-reducer';
+import {addTaskAC, TaskType} from "./state/tasks-reducer";
+import {
+    changeTodoListFilterAC,
+    FilterValueType,
+    removeTodoListAC
+} from './state/todolists-reducer';
+import {Task} from './Task';
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./state/store";
 
 type PropsType = {
     id: string
     title: string
-    tasks: Array<TaskType>
-    removeTask: (id: string, todoListId: string) => void
-    filerTask: (value: FilterValueType, todoListId: string) => void
-    addTask: (title: string, todoListId: string) => void
-    changeTaskStatus: (id: string, isDone: boolean, todoListId: string) => void
     filter: FilterValueType
-    removeTodoList: (id: string) => void
-    changeTaskTitle: (newValue: string, taskId: string, todoListId: string)=> void
-    changeTodoListTitle: (newValue: string, todoListId: string)=> void
 }
 
 const ALL = "All";
 const ACTIVE = "Active";
 const COMPLETED = "Completed"
 
-export function Todolist(props: PropsType) {
+export const Todolist = React.memo((props: PropsType) => {
 
-    const addTask = (title:string) => {
-        props.addTask(title, props.id)
+    let tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[props.id]);
+    const dispatch = useDispatch();
+
+    if (props.filter === ACTIVE) {
+        tasks = tasks.filter((task) => !task.isDone)
+    } else if (props.filter === COMPLETED) {
+        tasks = tasks.filter((task) => task.isDone)
     }
 
-    const onClickFilterHandler = (nameButton: FilterValueType) => {
-        props.filerTask(nameButton, props.id);
-    }
-    const onClickRemoveTaskHandler = (taskId: string) => props.removeTask(taskId, props.id)
+    const onClickFilterHandler = useCallback((nameButton: FilterValueType) => {
+        dispatch(changeTodoListFilterAC(nameButton, props.id))
+    }, [props.id])
 
-    const onChangeCheckboxHandler = (e: ChangeEvent<HTMLInputElement>, taskId: string) => {
-        let newIsDoneValue = e.currentTarget.checked
-        props.changeTaskStatus(taskId, newIsDoneValue, props.id)
-    }
+    const removeTodoListHandler = useCallback((id: string) => {
+        dispatch(removeTodoListAC(id))
+    }, [])
 
-    const changeTodoListTitleCallback = (newValue: string) => {
-        props.changeTodoListTitle(newValue, props.id)
-    }
+    const addTask = useCallback((title: string) => {
+        dispatch(addTaskAC(title, props.id))
+    }, [props.id])
 
     return (
         <div>
             <h3>
-                <EditableSpan value={props.title} onChange={changeTodoListTitleCallback}/>
-                <IconButton aria-label="delete" onClick={()=>props.removeTodoList(props.id)}>
-                    <DeleteIcon />
+                <EditableSpan value={props.title} todolistId={props.id}/>
+                <IconButton aria-label="delete" onClick={() => removeTodoListHandler(props.id)}>
+                    <DeleteIcon/>
                 </IconButton>
             </h3>
             <AddItemForm addItem={addTask}/>
             <ul style={{listStyleType: "none"}}>
-                {props.tasks.map((task) => {
-                    const {id, isDone, title} = task;
-                    const changeTitleTaskCallback = (newValue: string) => {
-                        props.changeTaskTitle(newValue, id, props.id)
-                    }
-                    return (
-                        <li key={id} className={isDone ? 'is-done' : ''}>
-                            <Checkbox
-                                checked={isDone}
-                                onChange={(e) => onChangeCheckboxHandler(e, id)}
-                            />
-                            <EditableSpan value={title} onChange={changeTitleTaskCallback}/>
-                            <IconButton aria-label="delete" onClick={() => onClickRemoveTaskHandler(id)}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </li>
-                    )
+                {tasks.map(task => {
+                    return <Task key={task.id} task={task} todolistId={props.id}/>
                 })}
             </ul>
             <div>
-                <Button
-                    onClick={() => onClickFilterHandler(ALL)}
+                <ButtonWithMemo
+                    onClick={useCallback(() => onClickFilterHandler(ALL),[])}
                     variant={props.filter === ALL ? 'outlined' : 'text'}
                     color={"inherit"}
-                >{ALL}</Button>
-                <Button
-                    onClick={() => onClickFilterHandler(ACTIVE)}
+                    title={ALL}
+                />
+                <ButtonWithMemo
+                    onClick={useCallback(() => onClickFilterHandler(ACTIVE),[])}
                     variant={props.filter === ACTIVE ? 'outlined' : 'text'}
                     color={"primary"}
-                >{ACTIVE}</Button>
-                <Button
-                    onClick={() => onClickFilterHandler(COMPLETED)}
+                    title={ACTIVE}
+                />
+                <ButtonWithMemo
+                    onClick={useCallback(() => onClickFilterHandler(COMPLETED),[])}
                     variant={props.filter === COMPLETED ? 'outlined' : 'text'}
                     color={"secondary"}
-                >{COMPLETED}</Button>
+                    title={COMPLETED}
+                />
             </div>
         </div>
     )
-}
+})
+
+const ButtonWithMemo: React.FC<ButtonProps> = React.memo(({onClick, variant, color, title}) => {
+    return <Button onClick={onClick}
+                   variant={variant}
+                   color={color}>
+        {title}
+    </Button>
+})
 
