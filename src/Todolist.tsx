@@ -5,15 +5,12 @@ import {EditableSpan} from "./EditableSpan";
 import Button, {ButtonProps} from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {addTaskAC, TaskType} from "./state/tasks-reducer";
-import {
-    changeTodoListFilterAC,
-    FilterValueType,
-    removeTodoListAC
-} from './state/todolists-reducer';
+import {addTaskAC} from "./state/tasks-reducer";
+import {changeTodoListFilterAC, FilterValueType, removeTodoListAC} from './state/todolists-reducer';
 import {Task} from './Task';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
+import {TaskStatuses, TaskType} from "./api/todolist-api";
 
 type PropsType = {
     id: string
@@ -31,9 +28,9 @@ export const Todolist = React.memo((props: PropsType) => {
     const dispatch = useDispatch();
 
     if (props.filter === ACTIVE) {
-        tasks = tasks.filter((task) => !task.isDone)
+        tasks = tasks.filter((task) => task.status !== TaskStatuses.New)
     } else if (props.filter === COMPLETED) {
-        tasks = tasks.filter((task) => task.isDone)
+        tasks = tasks.filter((task) => task.status === TaskStatuses.New)
     }
 
     const onClickFilterHandler = useCallback((nameButton: FilterValueType) => {

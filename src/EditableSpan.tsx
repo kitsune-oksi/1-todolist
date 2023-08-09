@@ -24,7 +24,7 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
             dispatch(changeTodoListTitleAC(title, props.todolistId))
         }
 
-    }, [props.taskId, props.todolistId])
+    }, [props.taskId, props.todolistId, editMode])
 
     const onChangeHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setTitle(event.currentTarget.value)

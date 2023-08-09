@@ -6,13 +6,13 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {Header} from "./Header";
-import {addTodoListAC, TodoListsType} from "./state/todolists-reducer";
+import {addTodoListAC, TodolistDomainType} from "./state/todolists-reducer";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
 
 
 function App() {
-    const todoLists = useSelector<AppRootStateType, Array<TodoListsType>>(state => state.todolists);
+    const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists);
     const dispatch = useDispatch();
 
     const addTodoList = useCallback((title: string) => {
