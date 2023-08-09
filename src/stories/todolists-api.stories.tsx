@@ -45,5 +45,38 @@ export const UpdateTodolistTitle = () => {
 
     return <div>{JSON.stringify(state)}</div>
 }
+export const GetTasks = () => {
+    const [state, setState] = useState<any>(null)
+    useEffect(() => {
+        const todolistId = 'fa23c75e-5da1-4611-af0c-32737f044a97';
+        todolistAPI.getTasks(todolistId)
+            .then((res)=>setState(res.data))
+    }, [])
+
+    return <div>{JSON.stringify(state)}</div>
+}
+export const CreateTask = () => {
+    const [state, setState] = useState<any>(null)
+    useEffect(() => {
+        const todolistId = 'fa23c75e-5da1-4611-af0c-32737f044a97';
+        const title = 'NEW TASK'
+        todolistAPI.createTask(todolistId, title)
+            .then((res)=>setState(res.data))
+    }, [])
+
+    return <div>{JSON.stringify(state)}</div>
+}
+export const DeleteTask = () => {
+    const [state, setState] = useState<any>(null)
+    useEffect(() => {
+        const todolistId = 'fa23c75e-5da1-4611-af0c-32737f044a97';
+        const taskId = 'e0f3cbc6-872b-4e44-b5f0-400e169c6dc5'
+        todolistAPI.deleteTask(todolistId, taskId)
+            .then((res)=>setState(res.data))
+    }, [])
+
+    return <div>{JSON.stringify(state)}</div>
+}
+
 
 
