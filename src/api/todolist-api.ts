@@ -1,10 +1,17 @@
 import axios from "axios"
+import {NewDataType} from "../state/tasks-reducer";
 
 export type TodolistType = {
     id: string
     addedDate: string
     order: number
     title: string
+}
+
+type ResponseTasks = {
+    items: TaskType[]
+    totalCount: number
+    error: null | string
 }
 
 export type TaskType = {
@@ -35,12 +42,11 @@ export enum TaskPriorities {
     Later = 4
 }
 
-type TaskModelType = {
+export type TaskModelType = {
     title: string
     description: string
-    completed: boolean
-    status: number
-    priority: number
+    status: TaskStatuses
+    priority: TaskPriorities
     startDate: string
     deadline: string
 }
@@ -88,7 +94,7 @@ export const todolistAPI = {
             'todo-lists'
         )
     },
-    updateTask(todolistId: string, taskId: string, model: TaskModelType) {
+    updateTask(todolistId: string, taskId: string, model: TaskModelType & NewDataType) {
         return instance.put<ResponseType<TaskType>>(
             `/todo-lists/${todolistId}/tasks/${taskId}`,
             model
@@ -106,7 +112,7 @@ export const todolistAPI = {
         )
     },
     getTasks(todolistId: string) {
-        return instance.get<TaskType>(
+        return instance.get<ResponseTasks>(
             `/todo-lists/${todolistId}/tasks`
         )
     }

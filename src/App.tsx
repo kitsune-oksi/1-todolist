@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
 import {Todolist} from "./Todolist";
 import {AddItemForm} from "./AddItemForm";
@@ -6,14 +6,23 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {Header} from "./Header";
-import {addTodoListAC, TodolistDomainType} from "./state/todolists-reducer";
-import {useDispatch, useSelector} from "react-redux";
+import {
+    addTodoListAC,
+    fetchTodolistsThunk,
+    TodolistDomainType
+} from "./state/todolists-reducer";
+import {useSelector} from "react-redux";
 import {AppRootStateType} from "./state/store";
+import {useAppDispatch} from "./state/store.hooks/store.hooks";
 
 
 function App() {
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
+
+    useEffect(()=>{
+        dispatch(fetchTodolistsThunk)
+    },[])
 
     const addTodoList = useCallback((title: string) => {
         dispatch(addTodoListAC(title))
