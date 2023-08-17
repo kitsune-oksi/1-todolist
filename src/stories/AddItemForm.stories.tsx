@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import {AddItemForm} from "../AddItemForm";
+import {AddItemForm} from "../components/AddItemForm/AddItemForm";
 import {action} from '@storybook/addon-actions'
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export

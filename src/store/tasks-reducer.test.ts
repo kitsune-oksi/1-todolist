@@ -1,4 +1,4 @@
-import {addTaskAC, removeTaskAC, tasksReducer, TasksStateType, updteTaskAC} from './tasks-reducer'
+import {addTaskAC, removeTaskAC, tasksReducer, TasksStateType, updateTaskAC} from './tasks-reducer'
 import {addTodoListAC, removeTodoListAC, TodolistDomainType, todolistsReducer} from "./todolists-reducer";
 import {TaskPriorities, TaskStatuses} from "../api/todolist-api";
 
@@ -54,7 +54,8 @@ test('correct task should be added to correct array', () => {
 })
 
 test('status of specified task should be changed', () => {
-    const action = updteTaskAC( 'todolistId2', '2',{title: 'milk', status: TaskStatuses.Completed, priority: TaskPriorities.Low, deadline: '', startDate: '', description: ''})
+    const action = updateTaskAC( 'todolistId2', '2',{title: 'milk', status: TaskStatuses.New, priority: TaskPriorities.Low, deadline: '', startDate: '', description: ''},
+    )
 
     const endState = tasksReducer(startState, action)
 
@@ -65,7 +66,7 @@ test('status of specified task should be changed', () => {
 })
 
 test('task`s title should be changed', () => {
-    const action = updteTaskAC('todolistId2', '3', {title: 'coffee', status: TaskStatuses.Completed, priority: TaskPriorities.Low, deadline: '', startDate: '', description: ''})
+    const action = updateTaskAC('todolistId2', '3', {title: 'coffee', status: TaskStatuses.Completed, priority: TaskPriorities.Low, deadline: '', startDate: '', description: ''})
 
     const endState = tasksReducer(startState, action)
 
@@ -76,7 +77,7 @@ test('task`s title should be changed', () => {
 })
 
 test('new array should be added when new todolist is added', () => {
-    const action = addTodoListAC('new todolist')
+    const action = addTodoListAC({id: '2.1', order: 0, addedDate: '', title: 'newTodolist'})
 
     const endState = tasksReducer(startState, action)
 
@@ -92,7 +93,8 @@ test('new array should be added when new todolist is added', () => {
 })
 
 test('ids should be equals', () => {
-    const action = addTodoListAC('new todolist')
+    const action = addTodoListAC({id: '2.1', title: 'milk', order: 0, addedDate: ''},
+    )
 
     const endTasksState = tasksReducer(startTasksState, action)
     const endTodolistsState = todolistsReducer(startTodolistsState, action)
@@ -101,8 +103,8 @@ test('ids should be equals', () => {
     const idFromTasks = keys[0]
     const idFromTodolists = endTodolistsState[0].id
 
-    expect(idFromTasks).toBe(action.payload.newTodoListId)
-    expect(idFromTodolists).toBe(action.payload.newTodoListId)
+    expect(idFromTasks).toBe(action.payload.todolist.id)
+    expect(idFromTodolists).toBe(action.payload.todolist.id)
 })
 
 test('property with todolistId should be deleted', () => {

@@ -1,5 +1,5 @@
 import axios from "axios"
-import {NewDataType} from "../state/tasks-reducer";
+import {NewDataType} from "../store/tasks-reducer";
 
 export type TodolistType = {
     id: string
@@ -95,7 +95,7 @@ export const todolistAPI = {
         )
     },
     updateTask(todolistId: string, taskId: string, model: TaskModelType & NewDataType) {
-        return instance.put<ResponseType<TaskType>>(
+        return instance.put<ResponseType<{item: TaskType}>>(
             `/todo-lists/${todolistId}/tasks/${taskId}`,
             model
         )

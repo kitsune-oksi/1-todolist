@@ -28,7 +28,6 @@ beforeEach(()=> {
 })
 
 test('correct todolist should be removed', () => {
-    // const endState = todolistsReducer(startState, {type: 'REMOVE-TODOLIST', id: todolistId1})
     const endState = todolistsReducer(startState, removeTodoListAC(todolistId1))
 
     expect(endState.length).toBe(1)
@@ -36,18 +35,13 @@ test('correct todolist should be removed', () => {
 })
 
 test('correct todolist should be added', () => {
-    const endState = todolistsReducer(startState, addTodoListAC(newTodolistTitle))
+    const endState = todolistsReducer(startState, addTodoListAC({id: '2.1', title: 'New Todolist', order: 0, addedDate: ''}))
 
     expect(endState.length).toBe(3)
     expect(endState[0].title).toBe(newTodolistTitle)
 })
 
 test('correct todolist should change its name', () => {
-    // const action = {
-    //     type: 'CHANGE-TODOLIST-TITLE',
-    //     id: todolistId2,
-    //     title: newTodolistTitle
-    // }
 
     const endState = todolistsReducer(startState, changeTodoListTitleAC(newTodolistTitle, todoListId))
 
