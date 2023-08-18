@@ -1,6 +1,6 @@
 import {todolistsReducer} from "./todolists-reducer";
 import {tasksReducer} from "./tasks-reducer";
-import {AnyAction, applyMiddleware, combineReducers, createStore} from "redux";
+import {AnyAction, applyMiddleware, combineReducers, legacy_createStore} from "redux";
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk, {ThunkDispatch} from "redux-thunk";
 
@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
     tasks: tasksReducer
 })
 
-export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
+export const store = legacy_createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 
 // @ts-ignore
 window.store = store;

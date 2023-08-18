@@ -28,10 +28,6 @@ export const Todolist = React.memo((props: PropsType) => {
     let tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[props.id]);
     const dispatch = useAppDispatch();
 
-    useEffect(()=>{
-        dispatch(fetchTasksTC(props.id))
-    },[props.id])
-
     if (props.filter === ACTIVE) {
         tasks = tasks.filter((task) => task.status !== TaskStatuses.New)
     } else if (props.filter === COMPLETED) {
@@ -48,6 +44,10 @@ export const Todolist = React.memo((props: PropsType) => {
 
     const addTask = useCallback((title: string) => {
         dispatch(addTaskTC(props.id, title))
+    }, [props.id])
+
+    useEffect(() => {
+        dispatch(fetchTasksTC(props.id))
     }, [props.id])
 
     return (

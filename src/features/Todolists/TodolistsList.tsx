@@ -12,13 +12,14 @@ export const TodolistsList: React.FC = () => {
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists);
     const dispatch = useAppDispatch();
 
+    const addTodoList = useCallback((title: string) => {
+        dispatch(addTodolistTC(title))
+    }, [])
+
     useEffect(()=>{
         dispatch(fetchTodolistsThunk)
     },[])
 
-    const addTodoList = useCallback((title: string) => {
-        dispatch(addTodolistTC(title))
-    }, [])
     return <>
         <Grid container style={{padding: "20px"}}>
             <AddItemForm addItem={addTodoList}/>
