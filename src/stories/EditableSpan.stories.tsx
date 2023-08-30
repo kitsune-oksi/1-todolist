@@ -19,5 +19,5 @@ type Story = StoryObj<typeof EditableSpan>;
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 export const EditableSpanStory: Story = {
   // More on args: https://storybook.js.org/docs/react/writing-stories/args
-  render: () => <Provider store={store}><EditableSpan value={'test'} todolistId={'dfgfdgdf'}/></Provider>
+  render: () => <Provider store={store}><EditableSpan value={'test'} todolistId={'dfgfdgdf'} disabled={false}/></Provider>
 }
