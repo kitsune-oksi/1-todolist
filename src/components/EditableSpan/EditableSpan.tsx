@@ -8,6 +8,7 @@ type EditableSpanPropsType = {
     value: string
     taskId?: string
     todolistId: string
+    disabled: boolean
 }
 
 export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
@@ -17,17 +18,17 @@ export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
     const dispatch = useAppDispatch();
 
     const activateEditMode = useCallback(() => {
-        setEditMode(!editMode)
-        if (editMode) {
-            if (props.taskId) {
-                dispatch(updateTaskTC(props.todolistId, props.taskId, {title}))
-                console.log('=====>title', title);
-            } else {
-                dispatch(changeTodolistTitleTC(title, props.todolistId))
+        if (!props.disabled) {
+            setEditMode(!editMode)
+            if (editMode) {
+                if (props.taskId) {
+                    dispatch(updateTaskTC(props.todolistId, props.taskId, {title}))
+                    console.log('=====>title', title);
+                } else {
+                    dispatch(changeTodolistTitleTC(title, props.todolistId))
+                }
             }
         }
-
-
     }, [props.taskId, props.todolistId, editMode, title])
 
     const onChangeHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {

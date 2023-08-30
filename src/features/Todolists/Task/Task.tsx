@@ -6,13 +6,15 @@ import React, {ChangeEvent, FC, useCallback} from "react";
 import {deleteTaskTC, updateTaskTC} from "../../../store/tasks-reducer";
 import {TaskStatuses, TaskType} from "../../../api/todolist-api";
 import {useAppDispatch} from "../../../store/store.hooks/store.hooks";
+import {RequestStatusType} from "../../../App/app-reducer";
 
 type TaskProps = {
     task: TaskType
     todolistId: string
+    entityStatus: RequestStatusType
 }
 
-export const Task: FC<TaskProps> = React.memo(({task, todolistId}) => {
+export const Task: FC<TaskProps> = React.memo(({task, todolistId, entityStatus}) => {
     const dispatch = useAppDispatch();
 
     const onChangeCheckboxHandler = useCallback((e: ChangeEvent<HTMLInputElement>, taskId: string) => {
@@ -29,7 +31,7 @@ export const Task: FC<TaskProps> = React.memo(({task, todolistId}) => {
             checked={task.status !== TaskStatuses.New}
             onChange={(e) => onChangeCheckboxHandler(e, task.id)}
         />
-        <EditableSpan value={task.title} taskId={task.id} todolistId={todolistId}/>
+        <EditableSpan value={task.title} taskId={task.id} todolistId={todolistId} disabled={entityStatus === 'loading'}/>
         <IconButton aria-label="delete" onClick={() => onClickRemoveTaskHandler(task.id)}>
             <DeleteIcon/>
         </IconButton>

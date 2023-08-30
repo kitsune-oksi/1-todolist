@@ -5,6 +5,8 @@ import {
     RemoveTodoListACType,
     SetTodolistsACType
 } from "./todolists-reducer";
+import {setAppStatusAC} from "../App/app-reducer";
+import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
 
 export type TasksStateType = {
     [key: string]: TaskType[]
@@ -110,42 +112,59 @@ export const setTasksAC = (todolistId: string, tasks: TaskType[]) => {
 
 //thunks
 export const fetchTasksTC = (todolistId: string) => (dispatch: AppDispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todolistAPI.getTasks(todolistId)
-        .then((res) => dispatch(setTasksAC(todolistId, res.data.items)))
+        .then((res) => {
+            dispatch(setTasksAC(todolistId, res.data.items));
+            dispatch(setAppStatusAC('idle'));
+        })
+        .catch((error) => handleServerNetworkError(error, dispatch))
 }
 export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: AppDispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todolistAPI.deleteTask(todolistId, taskId)
         .then(() => {
-            dispatch(removeTaskAC(taskId, todolistId))
+            dispatch(removeTaskAC(taskId, todolistId));
+            dispatch(setAppStatusAC('idle'));
         })
+        .catch((error) => handleServerNetworkError(error, dispatch))
 }
 export const addTaskTC = (todolistId: string, title: string) => (dispatch: AppDispatch) => {
+    dispatch(setAppStatusAC('loading'));
     todolistAPI.createTask(todolistId, title)
         .then((res) => {
-            const {
-                description,
-                title,
-                status,
-                priority,
-                startDate,
-                deadline,
-                id,
-                todoListId,
-                order,
-                addedDate
-            } = res.data.data.item;
-            dispatch(addTaskAC({
-                description,
-                title,
-                status,
-                priority,
-                startDate,
-                deadline,
-                id,
-                todoListId,
-                order,
-                addedDate
-            }))
+            if (res.data.resultCode === 0) {
+                const {
+                    description,
+                    title,
+                    status,
+                    priority,
+                    startDate,
+                    deadline,
+                    id,
+                    todoListId,
+                    order,
+                    addedDate
+                } = res.data.data.item;
+                dispatch(addTaskAC({
+                    description,
+                    title,
+                    status,
+                    priority,
+                    startDate,
+                    deadline,
+                    id,
+                    todoListId,
+                    order,
+                    addedDate
+                }));
+                dispatch(setAppStatusAC('idle'));
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        })
+        .catch((error) => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 export const updateTaskTC = (todolistId: string, taskId: string, newData: NewDataType) => (dispatch: AppDispatch, getState: () => AppRootStateType) => {
@@ -163,17 +182,26 @@ export const updateTaskTC = (todolistId: string, taskId: string, newData: NewDat
         deadline: task.deadline,
         ...newData
     }
+    dispatch(setAppStatusAC('loading'));
     todolistAPI.updateTask(todolistId, taskId, model)
         .then((res) => {
-            const {title, description, status, priority, startDate, deadline} = res.data.data.item;
-            dispatch(updateTaskAC(todolistId, taskId, {
-                title,
-                description,
-                status,
-                priority,
-                startDate,
-                deadline
-            }))
+            if (res.data.resultCode === 0) {
+                const {title, description, status, priority, startDate, deadline} = res.data.data.item;
+                dispatch(updateTaskAC(todolistId, taskId, {
+                    title,
+                    description,
+                    status,
+                    priority,
+                    startDate,
+                    deadline
+                }));
+                dispatch(setAppStatusAC('idle'));
+            } else {
+                handleServerAppError(res.data, dispatch)
+            }
+        })
+        .catch((error) => {
+            handleServerNetworkError(error, dispatch)
         })
 }
 
