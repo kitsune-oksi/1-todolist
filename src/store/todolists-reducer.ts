@@ -117,14 +117,17 @@ export const fetchTodolistsThunk = (dispatch: AppDispatch) => {
 }
 export const changeTodolistTitleTC = (newTodolistTitle: string, todoListId: string) => (dispatch: AppDispatch) => {
     dispatch(setAppStatusAC('loading'));
+    dispatch(changeTodolistEntityStatusAC(todoListId, 'loading'))
     todolistAPI.updateTodolist(todoListId, newTodolistTitle)
         .then((res) => {
             if (res.data.resultCode === 0) {
                 dispatch(changeTodoListTitleAC(newTodolistTitle, todoListId));
                 dispatch(setAppStatusAC('idle'));
+                dispatch(changeTodolistEntityStatusAC(todoListId, 'succeeded'))
             }
             else {
                 handleServerAppError(res.data, dispatch)
+                dispatch(changeTodolistEntityStatusAC(todoListId, 'failed'))
             }
         })
         .catch((error) => handleServerNetworkError(error, dispatch));
@@ -135,7 +138,7 @@ export const removeTodolistTC = (todoListId: string) => (dispatch: AppDispatch) 
     todolistAPI.deleteTodolist(todoListId)
         .then(() => {
             dispatch(removeTodoListAC(todoListId));
-            dispatch(setAppStatusAC('idle'));
+            dispatch(setAppStatusAC('succeeded'));
         })
         .catch((error) => handleServerNetworkError(error, dispatch))
 }
