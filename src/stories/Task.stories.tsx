@@ -28,6 +28,6 @@ type Story = StoryObj<typeof Task>;
 export const TaskStory: Story = {
   // More on args: https://storybook.js.org/docs/react/writing-stories/args
   args: {
-    task: {id: '12wsdewfijdei2343', title: 'CSS', status: TaskStatuses.New, todoListId: 'todolistId1', order: 0, priority: TaskPriorities.Low, addedDate: '', deadline: '', startDate: '', description: ''},
+    task: {id: '12wsdewfijdei2343', title: 'CSS', status: TaskStatuses.New, todoListId: 'todolistId1', order: 0, priority: TaskPriorities.Low, addedDate: '', deadline: '', startDate: '', description: '', entityStatus: 'idle'},
   },
 }

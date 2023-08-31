@@ -1,5 +1,6 @@
 import axios from "axios"
 import {NewDataType} from "../store/tasks-reducer";
+import {RequestStatusType} from "../App/app-reducer";
 
 export type TodolistType = {
     id: string
@@ -25,6 +26,7 @@ export type TaskType = {
     todoListId: string
     order: number
     addedDate: string
+    entityStatus: RequestStatusType
 }
 
 export enum TaskStatuses {
