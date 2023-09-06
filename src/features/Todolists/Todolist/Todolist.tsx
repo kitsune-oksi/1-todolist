@@ -12,7 +12,7 @@ import {useSelector} from "react-redux";
 import {AppRootStateType} from "../../../store/store";
 import {TaskStatuses, TaskType} from "../../../api/todolist-api";
 import {useAppDispatch} from "../../../store/store.hooks/store.hooks";
-import {RequestStatusType} from "../../../App/app-reducer";
+import {RequestStatusType} from "../../../store/app-reducer";
 
 type PropsType = {
     id: string

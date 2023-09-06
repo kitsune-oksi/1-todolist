@@ -1,6 +1,7 @@
 import axios from "axios"
 import {NewDataType} from "../store/tasks-reducer";
-import {RequestStatusType} from "../App/app-reducer";
+import {RequestStatusType} from "../store/app-reducer";
+import {LoginDataType} from "../store/auth-reducer";
 
 export type TodolistType = {
     id: string
@@ -117,6 +118,18 @@ export const todolistAPI = {
         return instance.get<ResponseTasks>(
             `/todo-lists/${todolistId}/tasks`
         )
+    }
+}
+
+export const authAPI = {
+    login(values: LoginDataType) {
+        return instance.post<ResponseType<{userId: number}>>('auth/login', values)
+    },
+    me() {
+        return instance.get<ResponseType<{id: number, email: string, login: string}>>('auth/me')
+    },
+    logout() {
+        return instance.delete<ResponseType>('auth/login')
     }
 }
 

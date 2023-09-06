@@ -5,32 +5,8 @@ import {
     RemoveTodoListACType,
     SetTodolistsACType
 } from "./todolists-reducer";
-import {RequestStatusType, setAppStatusAC} from "../App/app-reducer";
+import {RequestStatusType, setAppStatusAC} from "./app-reducer";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
-
-export type TasksStateType = {
-    [key: string]: TaskType[]
-}
-
-export type NewDataType = {
-    title?: string
-    description?: string
-    status?: TaskStatuses
-    priority?: TaskPriorities
-    startDate?: string
-    deadline?: string
-}
-
-type ActionType =
-    ReturnType<typeof removeTaskAC>
-    | ReturnType<typeof addTaskAC>
-    | ReturnType<typeof updateTaskAC>
-    | AddTodoListACType
-    | RemoveTodoListACType
-    | ReturnType<typeof setTasksAC>
-    | SetTodolistsACType
-    | ReturnType<typeof changeTaskEntityStatusAC>;
-
 
 const initialState: TasksStateType = {}
 
@@ -123,14 +99,13 @@ export const changeTaskEntityStatusAC = (todolistId: string, taskId: string, sta
     } as const
 }
 
-
 //thunks
 export const fetchTasksTC = (todolistId: string) => (dispatch: AppDispatch) => {
     dispatch(setAppStatusAC('loading'));
     todolistAPI.getTasks(todolistId)
         .then((res) => {
             dispatch(setTasksAC(todolistId, res.data.items));
-            dispatch(setAppStatusAC('idle'));
+            dispatch(setAppStatusAC('succeeded'));
         })
         .catch((error) => handleServerNetworkError(error, dispatch))
 }
@@ -140,7 +115,7 @@ export const deleteTaskTC = (taskId: string, todolistId: string) => (dispatch: A
     todolistAPI.deleteTask(todolistId, taskId)
         .then(() => {
             dispatch(removeTaskAC(taskId, todolistId));
-            dispatch(setAppStatusAC('idle'));
+            dispatch(setAppStatusAC('succeeded'));
             dispatch(changeTaskEntityStatusAC(todolistId, taskId, 'succeeded'));
         })
         .catch((error) => handleServerNetworkError(error, dispatch))
@@ -175,7 +150,7 @@ export const addTaskTC = (todolistId: string, title: string) => (dispatch: AppDi
                     addedDate,
                     entityStatus: "succeeded"
                 }));
-                dispatch(setAppStatusAC('idle'));
+                dispatch(setAppStatusAC('succeeded'));
             } else {
                 handleServerAppError(res.data, dispatch)
             }
@@ -213,7 +188,7 @@ export const updateTaskTC = (todolistId: string, taskId: string, newData: NewDat
                     startDate,
                     deadline
                 }));
-                dispatch(setAppStatusAC('idle'));
+                dispatch(setAppStatusAC('succeeded'));
                 dispatch(changeTaskEntityStatusAC(todolistId, taskId, 'succeeded'));
             } else {
                 handleServerAppError(res.data, dispatch)
@@ -223,6 +198,28 @@ export const updateTaskTC = (todolistId: string, taskId: string, newData: NewDat
             handleServerNetworkError(error, dispatch)
         })
 }
+
+// types
+export type TasksStateType = {
+    [key: string]: TaskType[]
+}
+export type NewDataType = {
+    title?: string
+    description?: string
+    status?: TaskStatuses
+    priority?: TaskPriorities
+    startDate?: string
+    deadline?: string
+}
+type ActionType =
+    ReturnType<typeof removeTaskAC>
+    | ReturnType<typeof addTaskAC>
+    | ReturnType<typeof updateTaskAC>
+    | AddTodoListACType
+    | RemoveTodoListACType
+    | ReturnType<typeof setTasksAC>
+    | SetTodolistsACType
+    | ReturnType<typeof changeTaskEntityStatusAC>;
 
 
 
