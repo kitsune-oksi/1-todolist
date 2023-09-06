@@ -1,11 +1,11 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback} from 'react';
 import '../../../App/App.css';
 import {AddItemForm} from "../../../components/AddItemForm/AddItemForm";
 import {EditableSpan} from "../../../components/EditableSpan/EditableSpan";
 import Button, {ButtonProps} from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {addTaskTC, fetchTasksTC} from "../../../store/tasks-reducer";
+import {addTaskTC} from "../../../store/tasks-reducer";
 import {changeTodoListFilterAC, FilterValueType, removeTodolistTC} from '../../../store/todolists-reducer';
 import {Task} from '../Task/Task';
 import {useSelector} from "react-redux";
@@ -46,10 +46,6 @@ export const Todolist = React.memo((props: PropsType) => {
 
     const addTask = useCallback((title: string) => {
         dispatch(addTaskTC(props.id, title))
-    }, [props.id])
-
-    useEffect(() => {
-        dispatch(fetchTasksTC(props.id))
     }, [props.id])
 
     return (

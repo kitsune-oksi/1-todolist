@@ -2,6 +2,7 @@ import {SetAppErrorACType, setAppStatusAC, SetAppStatusACType} from "./app-reduc
 import {AppDispatch} from "./store";
 import {authAPI} from "../api/todolist-api";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
+import {clearTodosDataAC} from "./todolists-reducer";
 
 const initialState = {
     isLoggedIn: false,
@@ -76,6 +77,7 @@ export const logoutTC = () => (dispatch: AppDispatch) => {
             if (res.data.resultCode === 0) {
                 dispatch(setIsLoggedInAC(false))
                 dispatch(setAppStatusAC('succeeded'))
+                dispatch(clearTodosDataAC())
             } else {
                 handleServerAppError(res.data, dispatch)
             }

@@ -2,6 +2,7 @@ import {todolistAPI, TodolistType} from "../api/todolist-api";
 import {RequestStatusType, setAppStatusAC} from "./app-reducer";
 import {AppDispatch} from "./store";
 import {handleServerAppError, handleServerNetworkError} from "../utils/error-utils";
+import { fetchTasksTC } from "./tasks-reducer";
 
 const initialState: TodolistDomainType[] = []
 
@@ -24,6 +25,8 @@ export const todolistsReducer = (state: Array<TodolistDomainType> = initialState
             return action.payload.todolists.map(tl => ({...tl, filter: 'All', entityStatus: 'succeeded'}))
         case "CHANGE-TODOLIST-ENTITY-STATUS":
             return state.map(el => el.id === action.payload.id ? {...el, entityStatus: action.payload.status} : el)
+        case "CLEAR-DATA":
+            return []
         default:
             return state
     }
@@ -81,6 +84,11 @@ export const changeTodolistEntityStatusAC = (id: string, status: RequestStatusTy
         }
     } as const
 }
+export const clearTodosDataAC = () => {
+    return {
+        type: 'CLEAR-DATA'
+    } as const
+}
 
 //thunks
 export const fetchTodolistsThunk = (dispatch: AppDispatch) => {
@@ -89,6 +97,12 @@ export const fetchTodolistsThunk = (dispatch: AppDispatch) => {
         .then((res) => {
             dispatch(setTodolistsAC(res.data));
             dispatch(setAppStatusAC('succeeded'));
+            return res.data
+        })
+        .then((todos) => {
+            todos.forEach((tl) => {
+                dispatch(fetchTasksTC(tl.id))
+            })
         })
         .catch((error) => handleServerNetworkError(error, dispatch))
 }
@@ -101,8 +115,7 @@ export const changeTodolistTitleTC = (newTodolistTitle: string, todoListId: stri
                 dispatch(changeTodoListTitleAC(newTodolistTitle, todoListId));
                 dispatch(setAppStatusAC('succeeded'));
                 dispatch(changeTodolistEntityStatusAC(todoListId, 'succeeded'))
-            }
-            else {
+            } else {
                 handleServerAppError(res.data, dispatch)
                 dispatch(changeTodolistEntityStatusAC(todoListId, 'failed'))
             }
@@ -153,10 +166,13 @@ type ActionType =
     ReturnType<typeof changeTodoListTitleAC> |
     ReturnType<typeof changeTodoListFilterAC> |
     SetTodolistsACType |
-    ReturnType<typeof changeTodolistEntityStatusAC>;
+    ReturnType<typeof changeTodolistEntityStatusAC> |
+    ClearTodosDataType;
 
 export type AddTodoListACType = ReturnType<typeof addTodoListAC>;
 
 export type RemoveTodoListACType = ReturnType<typeof removeTodoListAC>;
 
 export type SetTodolistsACType = ReturnType<typeof setTodolistsAC>;
+
+export type ClearTodosDataType = ReturnType<typeof clearTodosDataAC>
