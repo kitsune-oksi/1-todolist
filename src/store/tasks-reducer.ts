@@ -1,7 +1,7 @@
 import {TaskModelType, TaskPriorities, TaskStatuses, TaskType, todolistAPI} from "../api/todolist-api";
 import {AppDispatch, AppRootStateType} from "./store";
 import {
-    AddTodoListACType,
+    AddTodoListACType, ClearTodosDataType,
     RemoveTodoListACType,
     SetTodolistsACType
 } from "./todolists-reducer";
@@ -46,6 +46,8 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
             return {...state, [action.payload.todolistId]: action.payload.tasks};
         case "CHANGE-TASK-ENTITY-STATUS":
             return {...state, [action.payload.todolistId]: state[action.payload.todolistId].map(el => el.id === action.payload.taskId ? {...el, entityStatus: action.payload.status} : el)}
+        case "CLEAR-DATA":
+            return {}
         default:
             return state
     }
@@ -219,7 +221,8 @@ type ActionType =
     | RemoveTodoListACType
     | ReturnType<typeof setTasksAC>
     | SetTodolistsACType
-    | ReturnType<typeof changeTaskEntityStatusAC>;
+    | ReturnType<typeof changeTaskEntityStatusAC>
+    | ClearTodosDataType;
 
 
 
