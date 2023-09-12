@@ -1,28 +1,30 @@
 import { useSelector } from "react-redux";
-import { AppRootStateType } from "store/store";
-import { addTodolistTC, fetchTodolistsThunk, TodolistDomainType } from "store/todolist-reducer";
+import { addTodolistTC, fetchTodolistsThunk } from "store/todolist-reducer";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import Grid from "@mui/material/Grid";
 import { AddItemForm } from "components/AddItemForm/AddItemForm";
 import Paper from "@mui/material/Paper";
 import { Todolist } from "./Todolist/Todolist";
 import { Navigate } from "react-router-dom";
+import { selectIsLoggedIn } from "features/Login/loginSelector";
+import { selectTodolist } from "features/Todolists/Todolist/todolistSelector";
 
 export const TodolistsList: React.FC = () => {
-  const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>((state) => state.todolist);
-  const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.login.isLoggedIn);
+  const todoLists = useSelector(selectTodolist);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
   const dispatch = useAppDispatch();
+  const refFirstRender = useRef(true);
 
   const addTodoList = useCallback((title: string) => {
     dispatch(addTodolistTC(title));
   }, []);
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      return;
+    if (isLoggedIn && refFirstRender.current) {
+      dispatch(fetchTodolistsThunk);
+      refFirstRender.current = false;
     }
-    dispatch(fetchTodolistsThunk);
   }, []);
 
   if (!isLoggedIn) {

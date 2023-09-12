@@ -9,10 +9,10 @@ import { addTaskTC } from "store/tasks-reducer";
 import { FilterValueType, removeTodolistTC, todolistActions } from "store/todolist-reducer";
 import { Task } from "../Task/Task";
 import { useSelector } from "react-redux";
-import { AppRootStateType } from "store/store";
-import { TaskStatuses, TaskType } from "api/todolist-api";
+import { TaskStatuses } from "api/todolist-api";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { RequestStatusType } from "store/app-reducer";
+import { selectTask } from "features/Todolists/Task/taskSelector";
 
 type PropsType = {
   id: string;
@@ -26,7 +26,7 @@ const ACTIVE = "Active";
 const COMPLETED = "Completed";
 
 export const Todolist = React.memo((props: PropsType) => {
-  let tasks = useSelector<AppRootStateType, Array<TaskType>>((state) => state.tasks[props.id]);
+  let tasks = useSelector(selectTask(props.id));
   const dispatch = useAppDispatch();
 
   if (props.filter === ACTIVE) {

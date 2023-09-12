@@ -1,25 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "./App.css";
 import Container from "@mui/material/Container";
 import { Header } from "components/Header/Header";
 import { TodolistsList } from "features/Todolists/TodolistsList";
-import { CircularProgress, LinearProgress } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
-import { AppRootStateType } from "store/store";
-import { RequestStatusType } from "store/app-reducer";
 import { ErrorSnackbar } from "components/ErrorSnackbar/ErrorSnackbar";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "features/Login/Login";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { initializeAppTC } from "store/auth-reducer";
+import { selectIsInitialized } from "features/Login/loginSelector";
 
 function App() {
-  const status = useSelector<AppRootStateType, RequestStatusType>((state) => state.app.status);
-  const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.login.isInitialized);
+  const isInitialized = useSelector(selectIsInitialized);
   const dispatch = useAppDispatch();
+  const refFirstRender = useRef(true);
 
   useEffect(() => {
-    dispatch(initializeAppTC());
+    if (!isInitialized && refFirstRender.current) {
+      dispatch(initializeAppTC());
+      refFirstRender.current = false;
+    }
   }, []);
 
   if (!isInitialized) {
@@ -34,7 +36,6 @@ function App() {
     <div className="App">
       <ErrorSnackbar />
       <Header />
-      {status === "loading" && <LinearProgress />}
       <Container fixed>
         <Routes>
           <Route path="/" element={<TodolistsList />} />

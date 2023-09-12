@@ -37,14 +37,13 @@ const slice = createSlice({
       }
     },
     setTodolists: (state, action: PayloadAction<{ todolists: Array<TodolistType> }>) => {
-      // action.payload.todolists.forEach((tl) =>
-      //   state.push({
-      //     ...tl,
-      //     filter: "All",
-      //     entityStatus: "idle",
-      //   }),
-      // );
-      return action.payload.todolists.map((tl) => ({ ...tl, filter: "All", entityStatus: "idle" }));
+      action.payload.todolists.forEach((tl) =>
+        state.push({
+          ...tl,
+          filter: "All",
+          entityStatus: "idle",
+        }),
+      );
     },
     changeTodolistEntityStatus: (state, action: PayloadAction<{ todoListId: string; status: RequestStatusType }>) => {
       const index = state.findIndex((todo) => todo.id === action.payload.todoListId);
