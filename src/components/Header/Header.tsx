@@ -7,12 +7,15 @@ import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import { useSelector } from "react-redux";
-import { AppRootStateType } from "store/store";
 import { logoutTC } from "store/auth-reducer";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
+import { LinearProgress } from "@mui/material";
+import { selectStatus } from "App/appSelectors";
+import { selectIsLoggedIn } from "features/Login/loginSelector";
 
 export function Header() {
-  const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.login.isLoggedIn);
+  const isLoggedIn = useSelector(selectIsLoggedIn);
+  const status = useSelector(selectStatus);
   const dispatch = useAppDispatch();
 
   return (
@@ -31,6 +34,7 @@ export function Header() {
             </Button>
           )}
         </Toolbar>
+        {status === "loading" && <LinearProgress />}
       </AppBar>
     </Box>
   );
