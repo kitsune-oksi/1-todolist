@@ -1,47 +1,62 @@
-export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
-
-type InitialStateType = {
-    status: RequestStatusType
-    error: null | string
-}
-
-export type SetAppStatusACType = ReturnType<typeof setAppStatusAC>;
-export type SetAppErrorACType = ReturnType<typeof setAppErrorAC>;
-
-type ActionsType =
-    SetAppStatusACType |
-    SetAppErrorACType
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: InitialStateType = {
-    status: 'idle' as RequestStatusType,
-    error: null
-}
+  status: "idle" as RequestStatusType,
+  error: null,
+};
 
-export const appReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
-    switch (action.type) {
-        case 'APP/SET-STATUS':
-            return {...state, status: action.payload.status}
-        case "APP/SET-ERROR":
-            return {...state, error: action.payload.error}
-        default:
-            return state
-    }
-}
+const slice = createSlice({
+  name: "app",
+  initialState: initialState,
+  reducers: {
+    setAppStatus: (state, action: PayloadAction<{ status: RequestStatusType }>) => {
+      state.status = action.payload.status;
+    },
+    setAppError: (state, action: PayloadAction<{ error: string | null }>) => {
+      state.error = action.payload.error;
+    },
+  },
+});
 
-export const setAppStatusAC = (status: RequestStatusType) => {
-    return {
-        type: 'APP/SET-STATUS',
-        payload: {
-            status
-        }
-    } as const
-}
+export const appReducer = slice.reducer;
 
-export const setAppErrorAC = (error: string | null) => {
-    return {
-        type: 'APP/SET-ERROR',
-        payload: {
-            error
-        }
-    } as const
-}
+export const appActions = slice.actions;
+
+// export const appReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
+//   switch (action.type) {
+//     case "APP/SET-STATUS":
+//       return { ...state, status: action.payload.status };
+//     case "APP/SET-ERROR":
+//       return { ...state, error: action.payload.error };
+//     default:
+//       return state;
+//   }
+// };
+
+// actions
+// export const setAppStatus = (status: RequestStatusType) => {
+//   return {
+//     type: "APP/SET-STATUS",
+//     payload: {
+//       status,
+//     },
+//   } as const;
+// };
+// export const setAppError = (error: string | null) => {
+//   return {
+//     type: "APP/SET-ERROR",
+//     payload: {
+//       error,
+//     },
+//   } as const;
+// };
+
+// types
+// export type SetAppStatusACType = ReturnType<typeof setAppStatus>;
+// export type SetAppErrorACType = ReturnType<typeof setAppError>;
+// type ActionsType = SetAppStatusACType | SetAppErrorACType;
+export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
+type InitialStateType = {
+  status: RequestStatusType;
+  error: null | string;
+};
