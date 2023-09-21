@@ -1,5 +1,6 @@
 import { v1 } from "uuid";
 import { FilterValueType, todolistActions, TodolistDomainType, todolistReducer } from "store/todolist-reducer";
+import { ERequestStatus } from "./app-reducer";
 
 let todolistId1: string;
 let todolistId2: string;
@@ -18,7 +19,7 @@ beforeEach(() => {
       filter: "All",
       order: 0,
       addedDate: "",
-      entityStatus: "idle",
+      entityStatus: ERequestStatus.idle,
     },
     {
       id: todolistId2,
@@ -26,7 +27,7 @@ beforeEach(() => {
       filter: "All",
       order: 1,
       addedDate: "",
-      entityStatus: "idle",
+      entityStatus: ERequestStatus.idle,
     },
   ];
   newTodolistTitle = "New Todolist";

@@ -6,13 +6,13 @@ import React, { ChangeEvent, FC, useCallback } from "react";
 import { deleteTaskTC, updateTaskTC } from "store/tasks-reducer";
 import { TaskStatuses, TaskType } from "api/todolist-api";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
-import { RequestStatusType } from "store/app-reducer";
+import { ERequestStatus } from "../../../store/app-reducer";
 
 type TaskProps = {
   task: TaskType;
   todolistId: string;
-  todolistEntityStatus: RequestStatusType;
-  taskEntityStatus: RequestStatusType;
+  todolistEntityStatus: ERequestStatus;
+  taskEntityStatus: ERequestStatus;
 };
 
 export const Task: FC<TaskProps> = React.memo(({ task, todolistId, todolistEntityStatus, taskEntityStatus }) => {

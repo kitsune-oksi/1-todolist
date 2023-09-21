@@ -1,6 +1,6 @@
 import axios from "axios";
 import { NewDataType } from "store/tasks-reducer";
-import { RequestStatusType } from "store/app-reducer";
+import { ERequestStatus } from "store/app-reducer";
 import { LoginDataType } from "store/auth-reducer";
 
 export type TodolistType = {
@@ -27,7 +27,7 @@ export type TaskType = {
   todoListId: string;
   order: number;
   addedDate: string;
-  entityStatus: RequestStatusType;
+  entityStatus: ERequestStatus;
 };
 
 export enum TaskStatuses {
@@ -91,9 +91,9 @@ export const todolistAPI = {
   deleteTask(todolistId: string, taskId: string) {
     return instance.delete<ResponseType>(`/todo-lists/${todolistId}/tasks/${taskId}`);
   },
-  createTask(todolistId: string, title: string) {
+  createTask(todolistId: string, titleNewTask: string) {
     return instance.post<ResponseType<{ item: TaskType }>>(`/todo-lists/${todolistId}/tasks`, {
-      title: title,
+      title: titleNewTask,
     });
   },
   getTasks(todolistId: string) {
