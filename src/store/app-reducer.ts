@@ -1,7 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+export enum ERequestStatus {
+  idle = "idle",
+  loading = "loading",
+  succeeded = "succeeded",
+  failed = "failed",
+}
+
 const initialState: InitialStateType = {
-  status: "idle" as RequestStatusType,
+  status: ERequestStatus.idle,
   error: null,
 };
 
@@ -9,7 +16,7 @@ const slice = createSlice({
   name: "app",
   initialState: initialState,
   reducers: {
-    setAppStatus: (state, action: PayloadAction<{ status: RequestStatusType }>) => {
+    setAppStatus: (state, action: PayloadAction<{ status: ERequestStatus }>) => {
       state.status = action.payload.status;
     },
     setAppError: (state, action: PayloadAction<{ error: string | null }>) => {
@@ -55,8 +62,7 @@ export const appActions = slice.actions;
 // export type SetAppStatusACType = ReturnType<typeof setAppStatus>;
 // export type SetAppErrorACType = ReturnType<typeof setAppError>;
 // type ActionsType = SetAppStatusACType | SetAppErrorACType;
-export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
 type InitialStateType = {
-  status: RequestStatusType;
+  status: ERequestStatus;
   error: null | string;
 };

@@ -1,16 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import "./App.css";
 import Container from "@mui/material/Container";
-import { Header } from "components/Header/Header";
 import { TodolistsList } from "features/Todolists/TodolistsList";
 import { CircularProgress } from "@mui/material";
 import { useSelector } from "react-redux";
-import { ErrorSnackbar } from "components/ErrorSnackbar/ErrorSnackbar";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "features/Login/Login";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { initializeAppTC } from "store/auth-reducer";
 import { selectIsInitialized } from "features/Login/loginSelector";
+import { ErrorSnackbar, Header } from "common/components";
 
 function App() {
   const isInitialized = useSelector(selectIsInitialized);

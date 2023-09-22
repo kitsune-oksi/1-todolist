@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
 import TextField from "@mui/material/TextField";
-import { changeTodolistTitleTC } from "store/todolist-reducer";
-import { updateTaskTC } from "store/tasks-reducer";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
+import { taskThunks } from "../../../store/tasks-reducer";
+import { todolistThunks } from "../../../store/todolist-reducer";
 
 type EditableSpanPropsType = {
   value: string;
@@ -11,25 +11,33 @@ type EditableSpanPropsType = {
   disabled: boolean;
 };
 
-export const EditableSpan = React.memo((props: EditableSpanPropsType) => {
+export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({ value, taskId, todolistId, disabled }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>(props.value);
+  const [title, setTitle] = useState<string>(value);
 
   const dispatch = useAppDispatch();
 
   const activateEditMode = useCallback(() => {
-    if (!props.disabled) {
+    if (!disabled) {
       setEditMode(!editMode);
       if (editMode) {
-        if (props.taskId) {
-          dispatch(updateTaskTC(props.todolistId, props.taskId, { title }));
+        if (taskId) {
+          dispatch(
+            taskThunks.updateTask({
+              todolistId,
+              taskId,
+              newData: {
+                title,
+              },
+            }),
+          );
           console.log("=====>title", title);
         } else {
-          dispatch(changeTodolistTitleTC(title, props.todolistId));
+          dispatch(todolistThunks.changeTodolistTitle({ newTodolistTitle: title, todoListId: todolistId }));
         }
       }
     }
-  }, [props.taskId, props.todolistId, editMode, title, props.disabled]);
+  }, [taskId, todolistId, editMode, title, disabled]);
 
   const onChangeHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
