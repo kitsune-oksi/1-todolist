@@ -1,4 +1,4 @@
-import { todolistActions, TodolistDomainType, todolistReducer } from "store/todolist-reducer";
+import { TodolistDomainType, todolistReducer, todolistThunks } from "store/todolist-reducer";
 import { ETaskPriorities, ETaskStatuses } from "common/enums/enums";
 import { taskReducer, TasksStateType, taskThunks } from "store/tasks-reducer";
 import { ERequestStatus } from "./app-reducer";
@@ -282,9 +282,16 @@ test("task`s title should be changed", () => {
 });
 
 test("new array should be added when new todolist is added", () => {
-  const action = todolistActions.addTodolist({
-    newTodolist: { id: "2.1", order: 0, addedDate: "", title: "newTodolist" },
-  });
+  const action = todolistThunks.addTodolist.fulfilled(
+    {
+      id: "2.1",
+      title: "milk",
+      order: 0,
+      addedDate: "",
+    },
+    "requestId",
+    "2.1",
+  );
 
   const endState = taskReducer(startState, action);
 
@@ -299,7 +306,16 @@ test("new array should be added when new todolist is added", () => {
 });
 
 test("ids should be equals", () => {
-  const action = todolistActions.addTodolist({ newTodolist: { id: "2.1", title: "milk", order: 0, addedDate: "" } });
+  const action = todolistThunks.addTodolist.fulfilled(
+    {
+      id: "2.1",
+      title: "milk",
+      order: 0,
+      addedDate: "",
+    },
+    "requestId",
+    "2.1",
+  );
 
   const endTasksState = taskReducer(startTasksState, action);
   const endTodolistsState = todolistReducer(startTodolistsState, action);
@@ -308,12 +324,12 @@ test("ids should be equals", () => {
   const idFromTasks = keys[0];
   const idFromTodolists = endTodolistsState[0].id;
 
-  expect(idFromTasks).toBe(action.payload.newTodolist.id);
-  expect(idFromTodolists).toBe(action.payload.newTodolist.id);
+  expect(idFromTasks).toBe(action.payload.id);
+  expect(idFromTodolists).toBe(action.payload.id);
 });
 
 test("property with todolistId should be deleted", () => {
-  const action = todolistActions.removeTodolist({ todoListId: "todolistId2" });
+  const action = todolistThunks.removeTodolist.fulfilled("todolistId2", "requestId", "todolistId2");
 
   const endState = taskReducer(startState, action);
 

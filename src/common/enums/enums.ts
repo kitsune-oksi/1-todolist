@@ -18,3 +18,9 @@ export enum EResultCode {
   error = 1,
   captcha = 10,
 }
+
+export enum EFilterValueType {
+  All = "All",
+  Active = "Active",
+  Completed = "Completed",
+}

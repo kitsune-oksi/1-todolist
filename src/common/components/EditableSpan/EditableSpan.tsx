@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useCallback, useState } from "react";
 import TextField from "@mui/material/TextField";
-import { changeTodolistTitleTC } from "store/todolist-reducer";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { taskThunks } from "../../../store/tasks-reducer";
+import { todolistThunks } from "../../../store/todolist-reducer";
 
 type EditableSpanPropsType = {
   value: string;
@@ -33,7 +33,7 @@ export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({ value
           );
           console.log("=====>title", title);
         } else {
-          dispatch(changeTodolistTitleTC(title, todolistId));
+          dispatch(todolistThunks.changeTodolistTitle({ newTodolistTitle: title, todoListId: todolistId }));
         }
       }
     }

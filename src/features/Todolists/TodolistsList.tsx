@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { addTodolistTC, fetchTodolistsThunk } from "store/todolist-reducer";
+import { todolistThunks } from "store/todolist-reducer";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import React, { useCallback, useEffect, useRef } from "react";
 import Grid from "@mui/material/Grid";
@@ -17,12 +17,12 @@ export const TodolistsList: React.FC = () => {
   const refFirstRender = useRef(true);
 
   const addTodoList = useCallback((title: string) => {
-    dispatch(addTodolistTC(title));
+    dispatch(todolistThunks.addTodolist(title));
   }, []);
 
   useEffect(() => {
     if (isLoggedIn && refFirstRender.current) {
-      dispatch(fetchTodolistsThunk);
+      dispatch(todolistThunks.setTodolists());
       refFirstRender.current = false;
     }
   }, []);

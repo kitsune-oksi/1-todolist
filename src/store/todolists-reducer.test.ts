@@ -1,13 +1,14 @@
 import { v1 } from "uuid";
-import { FilterValueType, todolistActions, TodolistDomainType, todolistReducer } from "store/todolist-reducer";
+import { todolistActions, TodolistDomainType, todolistReducer, todolistThunks } from "store/todolist-reducer";
 import { ERequestStatus } from "./app-reducer";
+import { EFilterValueType } from "common/enums/enums";
 
 let todolistId1: string;
 let todolistId2: string;
 let startState: Array<TodolistDomainType>;
 let newTodolistTitle: string;
 let todoListId: string;
-let newFilter: FilterValueType;
+let newFilter: EFilterValueType;
 
 beforeEach(() => {
   todolistId1 = v1();
@@ -16,7 +17,7 @@ beforeEach(() => {
     {
       id: todolistId1,
       title: "What to learn",
-      filter: "All",
+      filter: EFilterValueType.All,
       order: 0,
       addedDate: "",
       entityStatus: ERequestStatus.idle,
@@ -24,7 +25,7 @@ beforeEach(() => {
     {
       id: todolistId2,
       title: "What to buy",
-      filter: "All",
+      filter: EFilterValueType.All,
       order: 1,
       addedDate: "",
       entityStatus: ERequestStatus.idle,
@@ -32,11 +33,14 @@ beforeEach(() => {
   ];
   newTodolistTitle = "New Todolist";
   todoListId = todolistId2;
-  newFilter = "Completed";
+  newFilter = EFilterValueType.Completed;
 });
 
 test("correct todolist should be removed", () => {
-  const endState = todolistReducer(startState, todolistActions.removeTodolist({ todoListId: todolistId1 }));
+  const endState = todolistReducer(
+    startState,
+    todolistThunks.removeTodolist.fulfilled(todolistId1, "requestId", todolistId1),
+  );
 
   expect(endState.length).toBe(1);
   expect(endState[0].id).toBe(todolistId2);
@@ -45,7 +49,16 @@ test("correct todolist should be removed", () => {
 test("correct todolist should be added", () => {
   const endState = todolistReducer(
     startState,
-    todolistActions.addTodolist({ newTodolist: { id: "2.1", title: "New Todolist", order: 0, addedDate: "" } }),
+    todolistThunks.addTodolist.fulfilled(
+      {
+        id: "2.1",
+        title: "New Todolist",
+        order: 0,
+        addedDate: "",
+      },
+      "requestId",
+      "2.1",
+    ),
   );
 
   expect(endState.length).toBe(3);
@@ -53,7 +66,17 @@ test("correct todolist should be added", () => {
 });
 
 test("correct todolist should change its name", () => {
-  const endState = todolistReducer(startState, todolistActions.changeTodolistTitle({ todoListId, newTodolistTitle }));
+  const endState = todolistReducer(
+    startState,
+    todolistThunks.changeTodolistTitle.fulfilled(
+      {
+        todoListId,
+        newTodolistTitle,
+      },
+      "requestId",
+      { todoListId, newTodolistTitle },
+    ),
+  );
 
   expect(endState[0].title).toBe("What to learn");
   expect(endState[1].title).toBe(newTodolistTitle);

@@ -3,10 +3,10 @@ import "../../../App/App.css";
 import Button, { ButtonProps } from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { FilterValueType, removeTodolistTC, todolistActions } from "store/todolist-reducer";
+import { todolistActions, todolistThunks } from "store/todolist-reducer";
 import { Task } from "../Task/Task";
 import { useSelector } from "react-redux";
-import { ETaskStatuses } from "common/enums/enums";
+import { EFilterValueType, ETaskStatuses } from "common/enums/enums";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { selectTask } from "features/Todolists/Task/taskSelector";
 import { taskThunks } from "../../../store/tasks-reducer";
@@ -16,33 +16,29 @@ import { AddItemForm, EditableSpan } from "common/components";
 type PropsType = {
   id: string;
   title: string;
-  filter: FilterValueType;
+  filter: EFilterValueType;
   todolistEntityStatus: ERequestStatus;
 };
-
-const ALL = "All";
-const ACTIVE = "Active";
-const COMPLETED = "Completed";
 
 export const Todolist: React.FC<PropsType> = React.memo(({ id, title, filter, todolistEntityStatus }) => {
   let tasks = useSelector(selectTask(id));
   const dispatch = useAppDispatch();
 
-  if (filter === ACTIVE) {
+  if (filter === EFilterValueType.Active) {
     tasks = tasks.filter((task) => task.status !== ETaskStatuses.New);
-  } else if (filter === COMPLETED) {
+  } else if (filter === EFilterValueType.Completed) {
     tasks = tasks.filter((task) => task.status === ETaskStatuses.New);
   }
 
   const onClickFilterHandler = useCallback(
-    (nameButton: FilterValueType) => {
+    (nameButton: EFilterValueType) => {
       dispatch(todolistActions.changeTodolistFilter({ todoListId: id, newFilter: nameButton }));
     },
     [id],
   );
 
   const removeTodoListHandler = useCallback((id: string) => {
-    dispatch(removeTodolistTC(id));
+    dispatch(todolistThunks.removeTodolist(id));
   }, []);
 
   const addTaskHandler = useCallback(
@@ -80,22 +76,22 @@ export const Todolist: React.FC<PropsType> = React.memo(({ id, title, filter, to
       </ul>
       <div>
         <ButtonWithMemo
-          onClick={useCallback(() => onClickFilterHandler(ALL), [])}
-          variant={filter === ALL ? "outlined" : "text"}
+          onClick={useCallback(() => onClickFilterHandler(EFilterValueType.All), [])}
+          variant={filter === EFilterValueType.All ? "outlined" : "text"}
           color={"inherit"}
-          title={ALL}
+          title={EFilterValueType.All}
         />
         <ButtonWithMemo
-          onClick={useCallback(() => onClickFilterHandler(ACTIVE), [])}
-          variant={filter === ACTIVE ? "outlined" : "text"}
+          onClick={useCallback(() => onClickFilterHandler(EFilterValueType.Active), [])}
+          variant={filter === EFilterValueType.Active ? "outlined" : "text"}
           color={"primary"}
-          title={ACTIVE}
+          title={EFilterValueType.Active}
         />
         <ButtonWithMemo
-          onClick={useCallback(() => onClickFilterHandler(COMPLETED), [])}
-          variant={filter === COMPLETED ? "outlined" : "text"}
+          onClick={useCallback(() => onClickFilterHandler(EFilterValueType.Completed), [])}
+          variant={filter === EFilterValueType.Completed ? "outlined" : "text"}
           color={"secondary"}
-          title={COMPLETED}
+          title={EFilterValueType.Completed}
         />
       </div>
     </div>
