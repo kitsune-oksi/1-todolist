@@ -1,18 +1,17 @@
 import React, { useCallback } from "react";
 import "../../../App/App.css";
-import { AddItemForm } from "components/AddItemForm/AddItemForm";
-import { EditableSpan } from "components/EditableSpan/EditableSpan";
 import Button, { ButtonProps } from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FilterValueType, removeTodolistTC, todolistActions } from "store/todolist-reducer";
 import { Task } from "../Task/Task";
 import { useSelector } from "react-redux";
-import { TaskStatuses } from "api/todolist-api";
+import { ETaskStatuses } from "common/enums/enums";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { selectTask } from "features/Todolists/Task/taskSelector";
 import { taskThunks } from "../../../store/tasks-reducer";
 import { ERequestStatus } from "../../../store/app-reducer";
+import { AddItemForm, EditableSpan } from "common/components";
 
 type PropsType = {
   id: string;
@@ -30,9 +29,9 @@ export const Todolist: React.FC<PropsType> = React.memo(({ id, title, filter, to
   const dispatch = useAppDispatch();
 
   if (filter === ACTIVE) {
-    tasks = tasks.filter((task) => task.status !== TaskStatuses.New);
+    tasks = tasks.filter((task) => task.status !== ETaskStatuses.New);
   } else if (filter === COMPLETED) {
-    tasks = tasks.filter((task) => task.status === TaskStatuses.New);
+    tasks = tasks.filter((task) => task.status === ETaskStatuses.New);
   }
 
   const onClickFilterHandler = useCallback(

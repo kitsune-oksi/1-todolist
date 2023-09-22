@@ -1,12 +1,13 @@
 import Checkbox from "@mui/material/Checkbox";
-import { EditableSpan } from "components/EditableSpan/EditableSpan";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { ChangeEvent, FC, useCallback } from "react";
-import { deleteTaskTC, updateTaskTC } from "store/tasks-reducer";
-import { TaskStatuses, TaskType } from "api/todolist-api";
+import { taskThunks } from "store/tasks-reducer";
+import { ETaskStatuses } from "common/enums/enums";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { ERequestStatus } from "../../../store/app-reducer";
+import { EditableSpan } from "common/components";
+import { TaskType } from "common/api/todolistsApi";
 
 type TaskProps = {
   task: TaskType;
@@ -22,8 +23,12 @@ export const Task: FC<TaskProps> = React.memo(({ task, todolistId, todolistEntit
     (e: ChangeEvent<HTMLInputElement>, taskId: string) => {
       let newIsDoneValue = e.currentTarget.checked;
       dispatch(
-        updateTaskTC(todolistId, taskId, {
-          status: newIsDoneValue ? TaskStatuses.Completed : TaskStatuses.New,
+        taskThunks.updateTask({
+          todolistId,
+          taskId,
+          newData: {
+            status: newIsDoneValue ? ETaskStatuses.Completed : ETaskStatuses.New,
+          },
         }),
       );
     },
@@ -32,15 +37,15 @@ export const Task: FC<TaskProps> = React.memo(({ task, todolistId, todolistEntit
 
   const onClickRemoveTaskHandler = useCallback(
     (taskId: string) => {
-      dispatch(deleteTaskTC(taskId, todolistId));
+      dispatch(taskThunks.removeTask({ taskId, todolistId }));
     },
     [todolistId],
   );
 
   return (
-    <li key={task.id} className={task.status !== TaskStatuses.New ? "is-done" : ""}>
+    <li key={task.id} className={task.status !== ETaskStatuses.New ? "is-done" : ""}>
       <Checkbox
-        checked={task.status !== TaskStatuses.New}
+        checked={task.status !== ETaskStatuses.New}
         onChange={(e) => onChangeCheckboxHandler(e, task.id)}
         disabled={todolistEntityStatus === "loading" || taskEntityStatus === "loading"}
       />

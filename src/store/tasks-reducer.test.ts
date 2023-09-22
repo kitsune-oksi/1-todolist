@@ -1,6 +1,6 @@
 import { todolistActions, TodolistDomainType, todolistReducer } from "store/todolist-reducer";
-import { TaskPriorities, TaskStatuses } from "api/todolist-api";
-import { taskActions, taskReducer, TasksStateType, taskThunks } from "store/tasks-reducer";
+import { ETaskPriorities, ETaskStatuses } from "common/enums/enums";
+import { taskReducer, TasksStateType, taskThunks } from "store/tasks-reducer";
 import { ERequestStatus } from "./app-reducer";
 
 let startState: TasksStateType;
@@ -13,10 +13,10 @@ beforeEach(() => {
       {
         id: "1",
         title: "CSS",
-        status: TaskStatuses.New,
+        status: ETaskStatuses.New,
         todoListId: "todolistId1",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -26,10 +26,10 @@ beforeEach(() => {
       {
         id: "2",
         title: "JS",
-        status: TaskStatuses.Completed,
+        status: ETaskStatuses.Completed,
         todoListId: "todolistId1",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -39,10 +39,10 @@ beforeEach(() => {
       {
         id: "3",
         title: "React",
-        status: TaskStatuses.New,
+        status: ETaskStatuses.New,
         todoListId: "todolistId1",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -54,10 +54,10 @@ beforeEach(() => {
       {
         id: "1",
         title: "bread",
-        status: TaskStatuses.New,
+        status: ETaskStatuses.New,
         todoListId: "todolistId2",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -67,10 +67,10 @@ beforeEach(() => {
       {
         id: "2",
         title: "milk",
-        status: TaskStatuses.Completed,
+        status: ETaskStatuses.Completed,
         todoListId: "todolistId2",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -80,10 +80,10 @@ beforeEach(() => {
       {
         id: "3",
         title: "tea",
-        status: TaskStatuses.New,
+        status: ETaskStatuses.New,
         todoListId: "todolistId2",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -97,7 +97,10 @@ beforeEach(() => {
 });
 
 test("correct task should be deleted from correct array", () => {
-  const action = taskActions.removeTask({ taskId: "2", todolistId: "todolistId2" });
+  const action = taskThunks.removeTask.fulfilled({ taskId: "2", todolistId: "todolistId2" }, "requestId", {
+    taskId: "2",
+    todolistId: "todolistId2",
+  });
 
   const endState = taskReducer(startState, action);
 
@@ -106,10 +109,10 @@ test("correct task should be deleted from correct array", () => {
       {
         id: "1",
         title: "CSS",
-        status: TaskStatuses.New,
+        status: ETaskStatuses.New,
         todoListId: "todolistId1",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -119,10 +122,10 @@ test("correct task should be deleted from correct array", () => {
       {
         id: "2",
         title: "JS",
-        status: TaskStatuses.Completed,
+        status: ETaskStatuses.Completed,
         todoListId: "todolistId1",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -132,10 +135,10 @@ test("correct task should be deleted from correct array", () => {
       {
         id: "3",
         title: "React",
-        status: TaskStatuses.New,
+        status: ETaskStatuses.New,
         todoListId: "todolistId1",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -147,10 +150,10 @@ test("correct task should be deleted from correct array", () => {
       {
         id: "1",
         title: "bread",
-        status: TaskStatuses.New,
+        status: ETaskStatuses.New,
         todoListId: "todolistId2",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -160,10 +163,10 @@ test("correct task should be deleted from correct array", () => {
       {
         id: "3",
         title: "tea",
-        status: TaskStatuses.New,
+        status: ETaskStatuses.New,
         todoListId: "todolistId2",
         order: 0,
-        priority: TaskPriorities.Low,
+        priority: ETaskPriorities.Low,
         addedDate: "",
         deadline: "",
         startDate: "",
@@ -174,66 +177,101 @@ test("correct task should be deleted from correct array", () => {
   });
 });
 
-// test("correct task should be added to correct array", () => {
-//   const action = taskActions.addTask({
-//     task: {
-//       id: "3",
-//       title: "juce",
-//       status: TaskStatuses.New,
-//       todoListId: "todolistId2",
-//       order: 0,
-//       priority: TaskPriorities.Low,
-//       addedDate: "",
-//       deadline: "",
-//       startDate: "",
-//       description: "",
-//       entityStatus: "idle",
-//     },
-//   });
-//   const endState = taskReducer(startState, action);
-//
-//   expect(endState["todolistId1"].length).toBe(3);
-//   expect(endState["todolistId2"].length).toBe(4);
-//   expect(endState["todolistId2"][0].id).toBeDefined();
-//   expect(endState["todolistId2"][0].title).toBe("juce");
-//   expect(endState["todolistId2"][0].status).toBe(TaskStatuses.New);
-// });
-
-test("status of specified task should be changed", () => {
-  const action = taskActions.updateTask({
-    todolistId: "todolistId2",
-    taskId: "2",
-    model: {
-      title: "milk",
-      status: TaskStatuses.New,
-      priority: TaskPriorities.Low,
+test("correct task should be added to correct array", () => {
+  const action = taskThunks.addTask.fulfilled(
+    {
+      id: "3",
+      title: "juce",
+      status: ETaskStatuses.New,
+      todoListId: "todolistId2",
+      order: 0,
+      priority: ETaskPriorities.Low,
+      addedDate: "",
       deadline: "",
       startDate: "",
       description: "",
+      entityStatus: ERequestStatus.idle,
     },
-  });
+    "requestId",
+    { todolistId: "todolistId1", titleNewTask: "juce" },
+  );
+  const endState = taskReducer(startState, action);
+
+  expect(endState["todolistId1"].length).toBe(3);
+  expect(endState["todolistId2"].length).toBe(4);
+  expect(endState["todolistId2"][0].id).toBeDefined();
+  expect(endState["todolistId2"][0].title).toBe("juce");
+  expect(endState["todolistId2"][0].status).toBe(ETaskStatuses.New);
+});
+
+//1 параметр (payload) - то, что thunk возвращает
+// 2 параметр (meta данные) - нужны только для тестов, чтобы они отрабатывали, хотя эти данные мы не используем. В meta данные передаем 'requestId'
+// 3 параметр(arg) - то, что thunk принимает. В нашем случае это todolistId
+test("status of specified task should be changed", () => {
+  const action = taskThunks.updateTask.fulfilled(
+    {
+      todolistId: "todolistId2",
+      taskId: "2",
+      model: {
+        title: "milk",
+        status: ETaskStatuses.New,
+        priority: ETaskPriorities.Low,
+        deadline: "",
+        startDate: "",
+        description: "",
+      },
+    },
+    "requestId",
+    {
+      todolistId: "todolistId2",
+      taskId: "2",
+      newData: {
+        title: "milk",
+        description: "",
+        status: ETaskStatuses.New,
+        priority: ETaskPriorities.Low,
+        startDate: "",
+        deadline: "",
+      },
+    },
+  );
 
   const endState = taskReducer(startState, action);
 
-  expect(endState["todolistId2"][1].status).toBe(TaskStatuses.New);
-  expect(endState["todolistId2"][0].status).toBe(TaskStatuses.New);
-  expect(endState["todolistId2"][2].status).toBe(TaskStatuses.New);
+  expect(endState["todolistId2"][1].status).toBe(ETaskStatuses.New);
+  expect(endState["todolistId2"][0].status).toBe(ETaskStatuses.New);
+  expect(endState["todolistId2"][2].status).toBe(ETaskStatuses.New);
   expect(startState["todolistId1"]).toEqual(endState["todolistId1"]);
 });
 
 test("task`s title should be changed", () => {
-  const action = taskActions.updateTask({
-    todolistId: "todolistId2",
-    taskId: "3",
-    model: {
-      title: "coffee",
-      status: TaskStatuses.Completed,
-      priority: TaskPriorities.Low,
-      deadline: "",
-      startDate: "",
-      description: "",
+  const action = taskThunks.updateTask.fulfilled(
+    {
+      todolistId: "todolistId2",
+      taskId: "3",
+      model: {
+        title: "coffee",
+        status: ETaskStatuses.Completed,
+        priority: ETaskPriorities.Low,
+        deadline: "",
+        startDate: "",
+        description: "",
+      },
     },
-  });
+    "requestId",
+    {
+      todolistId: "todolistId2",
+      taskId: "2",
+      newData: {
+        title: "milk",
+        description: "",
+        status: ETaskStatuses.New,
+        priority: ETaskPriorities.Low,
+        startDate: "",
+        deadline: "",
+      },
+    },
+  );
 
   const endState = taskReducer(startState, action);
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { TaskPriorities, TaskStatuses } from "api/todolist-api";
+import { ETaskPriorities, ETaskStatuses } from "common/enums/enums";
 import { Task } from "features/Todolists/Task/Task";
 import { ReduxStoreProviderDecorator } from "./decorators/ReduxStoreProviderDecorator";
 import { ERequestStatus } from "../store/app-reducer";
@@ -30,10 +30,10 @@ export const TaskStory: Story = {
     task: {
       id: "12wsdewfijdei2343",
       title: "CSS",
-      status: TaskStatuses.New,
+      status: ETaskStatuses.New,
       todoListId: "todolistId1",
       order: 0,
-      priority: TaskPriorities.Low,
+      priority: ETaskPriorities.Low,
       addedDate: "",
       deadline: "",
       startDate: "",

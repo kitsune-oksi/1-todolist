@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { EditableSpan } from "components/EditableSpan/EditableSpan";
+import { EditableSpan } from "common/components";
 import { Provider } from "react-redux";
 import { store } from "store/store";
 

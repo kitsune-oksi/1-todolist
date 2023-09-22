@@ -1,9 +1,10 @@
-import { todolistAPI, TodolistType } from "api/todolist-api";
+import { EResultCode } from "common/enums/enums";
 import { appActions, ERequestStatus } from "./app-reducer";
 import { AppDispatch } from "./store";
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { taskThunks } from "./tasks-reducer";
+import { handleServerAppError, handleServerNetworkError } from "common/utils";
+import { todolistAPI, TodolistType } from "common/api/todolistsApi";
 
 const initialState: TodolistDomainType[] = [];
 
@@ -186,7 +187,7 @@ export const changeTodolistTitleTC = (newTodolistTitle: string, todoListId: stri
   todolistAPI
     .updateTodolist(todoListId, newTodolistTitle)
     .then((res) => {
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === EResultCode.success) {
         dispatch(todolistActions.changeTodolistTitle({ newTodolistTitle, todoListId }));
         dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
         dispatch(todolistActions.changeTodolistEntityStatus({ todoListId, status: ERequestStatus.succeeded }));
@@ -213,7 +214,7 @@ export const addTodolistTC = (newTodolistTitle: string) => (dispatch: AppDispatc
   todolistAPI
     .createTodolist(newTodolistTitle)
     .then((res) => {
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === EResultCode.success) {
         const { id, title, order, addedDate } = res.data.data.item;
         dispatch(todolistActions.addTodolist({ newTodolist: { id, title, order, addedDate } }));
         dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));

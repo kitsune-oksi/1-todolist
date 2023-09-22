@@ -1,9 +1,10 @@
 import { appActions, ERequestStatus } from "./app-reducer";
 import { AppDispatch } from "./store";
-import { authAPI } from "api/todolist-api";
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils";
+import { EResultCode } from "common/enums/enums";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { todolistActions } from "store/todolist-reducer";
+import { handleServerAppError, handleServerNetworkError } from "common/utils";
+import { authAPI } from "common/api/authApi";
 
 const initialState = {
   isLoggedIn: false,
@@ -64,7 +65,7 @@ export const loginTC = (values: LoginDataType) => (dispatch: AppDispatch) => {
   authAPI
     .login(values)
     .then((res) => {
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === EResultCode.success) {
         dispatch(authActions.setIsLoggedIn({ value: true }));
         dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
       } else {
@@ -81,7 +82,7 @@ export const initializeAppTC = () => (dispatch: AppDispatch) => {
     .me()
     .then((res) => {
       dispatch(authActions.setIsInitialized({ value: true }));
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === EResultCode.success) {
         dispatch(authActions.setIsLoggedIn({ value: true }));
         dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
       } else {
@@ -97,7 +98,7 @@ export const logoutTC = () => (dispatch: AppDispatch) => {
   authAPI
     .logout()
     .then((res) => {
-      if (res.data.resultCode === 0) {
+      if (res.data.resultCode === EResultCode.success) {
         dispatch(authActions.setIsLoggedIn({ value: false }));
         dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
         dispatch(todolistActions.clearTodolistsData());
