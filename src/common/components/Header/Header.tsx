@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import { useSelector } from "react-redux";
-import { logoutTC } from "store/auth-reducer";
+import { authThunks } from "store/auth-reducer";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { LinearProgress } from "@mui/material";
 import { selectStatus } from "App/appSelectors";
@@ -29,7 +29,7 @@ export function Header() {
             Todolist
           </Typography>
           {isLoggedIn && (
-            <Button color="inherit" onClick={() => dispatch(logoutTC())}>
+            <Button color="inherit" onClick={() => dispatch(authThunks.logout())}>
               Logout
             </Button>
           )}

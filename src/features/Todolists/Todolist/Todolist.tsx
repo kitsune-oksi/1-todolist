@@ -6,11 +6,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { todolistActions, todolistThunks } from "store/todolist-reducer";
 import { Task } from "../Task/Task";
 import { useSelector } from "react-redux";
-import { EFilterValueType, ETaskStatuses } from "common/enums/enums";
+import { EFilterValueType, ERequestStatus, ETaskStatuses } from "common/enums/enums";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { selectTask } from "features/Todolists/Task/taskSelector";
 import { taskThunks } from "../../../store/tasks-reducer";
-import { ERequestStatus } from "../../../store/app-reducer";
 import { AddItemForm, EditableSpan } from "common/components";
 
 type PropsType = {
