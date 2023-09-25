@@ -1,7 +1,6 @@
 import { instance } from "./common.api";
 import { NewDataType } from "../../store/tasks-reducer";
-import { ETaskPriorities, ETaskStatuses } from "../enums/enums";
-import { ERequestStatus } from "../../store/app-reducer";
+import { ERequestStatus, ETaskPriorities, ETaskStatuses } from "../enums/enums";
 import { ResponseType } from "./common.api";
 
 export const todolistAPI = {

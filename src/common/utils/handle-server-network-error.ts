@@ -1,5 +1,6 @@
 import axios from "axios";
-import { appActions, ERequestStatus } from "store/app-reducer";
+import { ERequestStatus } from "common/enums/enums";
+import { appActions } from "store/app-reducer";
 import { AppDispatch } from "store/store";
 
 export const handleServerNetworkError = (err: unknown, dispatch: AppDispatch): void => {

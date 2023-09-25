@@ -1,5 +1,5 @@
-import { EResultCode, ETaskPriorities, ETaskStatuses } from "common/enums/enums";
-import { appActions, ERequestStatus } from "./app-reducer";
+import { ERequestStatus, EResultCode, ETaskPriorities, ETaskStatuses } from "common/enums/enums";
+import { appActions } from "./app-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { todolistActions, todolistThunks } from "store/todolist-reducer";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";

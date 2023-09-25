@@ -24,3 +24,10 @@ export enum EFilterValueType {
   Active = "Active",
   Completed = "Completed",
 }
+
+export enum ERequestStatus {
+  idle = "idle",
+  loading = "loading",
+  succeeded = "succeeded",
+  failed = "failed",
+}

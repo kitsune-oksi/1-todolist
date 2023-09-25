@@ -1,6 +1,7 @@
 import { AppDispatch } from "../../store/store";
-import { appActions, ERequestStatus } from "../../store/app-reducer";
+import { appActions } from "../../store/app-reducer";
 import { ResponseType } from "../api/common.api";
+import { ERequestStatus } from "common/enums/enums";
 
 export const handleServerAppError = <T>(data: ResponseType<T>, dispatch: AppDispatch) => {
   if (data.messages.length) {

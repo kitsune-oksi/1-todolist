@@ -7,9 +7,9 @@ import { useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Login } from "features/Login/Login";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
-import { initializeAppTC } from "store/auth-reducer";
 import { selectIsInitialized } from "features/Login/loginSelector";
 import { ErrorSnackbar, Header } from "common/components";
+import { authThunks } from "../store/auth-reducer";
 
 function App() {
   const isInitialized = useSelector(selectIsInitialized);
@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     if (!isInitialized && refFirstRender.current) {
-      dispatch(initializeAppTC());
+      dispatch(authThunks.initializeApp());
       refFirstRender.current = false;
     }
   }, []);
