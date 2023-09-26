@@ -1,5 +1,5 @@
 import { appActions } from "./app-reducer";
-import { ERequestStatus, EResultCode } from "common/enums/enums";
+import { ERequestStatus, EResultCode } from "common/enums";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
 import { authAPI } from "common/api/authApi";

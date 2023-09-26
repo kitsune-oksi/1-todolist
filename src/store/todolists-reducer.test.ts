@@ -1,6 +1,6 @@
 import { v1 } from "uuid";
 import { todolistActions, TodolistDomainType, todolistReducer, todolistThunks } from "store/todolist-reducer";
-import { EFilterValueType, ERequestStatus } from "common/enums/enums";
+import { EFilterValueType, ERequestStatus } from "common/enums";
 
 let todolistId1: string;
 let todolistId2: string;

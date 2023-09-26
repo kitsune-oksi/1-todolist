@@ -1,16 +1,16 @@
 import React, { useCallback } from "react";
-import "../../../App/App.css";
+import "App/App.css";
 import Button, { ButtonProps } from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { todolistActions, todolistThunks } from "store/todolist-reducer";
-import { Task } from "../Task/Task";
+import { Task } from "features/Todolists/Task/Task";
 import { useSelector } from "react-redux";
-import { EFilterValueType, ERequestStatus, ETaskStatuses } from "common/enums/enums";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { selectTask } from "features/Todolists/Task/taskSelector";
-import { taskThunks } from "../../../store/tasks-reducer";
+import { taskThunks } from "store/tasks-reducer";
 import { AddItemForm, EditableSpan } from "common/components";
+import { EFilterValueType, ERequestStatus, ETaskStatuses } from "common/enums";
 
 type PropsType = {
   id: string;

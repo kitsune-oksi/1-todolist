@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { ERequestStatus, ETaskPriorities, ETaskStatuses } from "common/enums/enums";
+import { ERequestStatus, ETaskPriorities, ETaskStatuses } from "common/enums";
 import { Task } from "features/Todolists/Task/Task";
 import { ReduxStoreProviderDecorator } from "./decorators/ReduxStoreProviderDecorator";
 

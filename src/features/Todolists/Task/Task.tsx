@@ -3,10 +3,10 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { ChangeEvent, FC, useCallback } from "react";
 import { taskThunks } from "store/tasks-reducer";
-import { ERequestStatus, ETaskStatuses } from "common/enums/enums";
+import { ERequestStatus, ETaskStatuses } from "common/enums";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { EditableSpan } from "common/components";
-import { TaskType } from "common/api/todolistsApi";
+import { TaskType } from "common/api/TodolistTypes";
 
 type TaskProps = {
   task: TaskType;
