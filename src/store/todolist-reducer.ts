@@ -1,9 +1,10 @@
-import { EFilterValueType, ERequestStatus, EResultCode } from "common/enums/enums";
-import { appActions } from "./app-reducer";
+import { EFilterValueType, ERequestStatus, EResultCode } from "common/enums";
+import { appActions } from "store/app-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
-import { todolistAPI, TodolistType } from "common/api/todolistsApi";
-import { taskThunks } from "./tasks-reducer";
+import { todolistAPI } from "common/api/todolistsApi";
+import { taskThunks } from "store/tasks-reducer";
+import { TodolistType } from "common/api/TodolistTypes";
 
 const slice = createSlice({
   name: "todolist",

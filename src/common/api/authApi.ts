@@ -1,15 +1,14 @@
-import { LoginDataType } from "../../store/auth-reducer";
-import { instance } from "./common.api";
-import { ResponseType } from "./common.api";
+import { LoginDataType } from "store/auth-reducer";
+import { BaseResponseType, instance } from "common/api/common.api";
 
 export const authAPI = {
   login(values: LoginDataType) {
-    return instance.post<ResponseType<{ userId: number }>>("auth/login", values);
+    return instance.post<BaseResponseType<{ userId: number }>>("auth/login", values);
   },
   me() {
-    return instance.get<ResponseType<{ id: number; email: string; login: string }>>("auth/me");
+    return instance.get<BaseResponseType<{ id: number; email: string; login: string }>>("auth/me");
   },
   logout() {
-    return instance.delete<ResponseType>("auth/login");
+    return instance.delete<BaseResponseType>("auth/login");
   },
 };

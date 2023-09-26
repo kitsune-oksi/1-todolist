@@ -9,7 +9,7 @@ import { Login } from "features/Login/Login";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { selectIsInitialized } from "features/Login/loginSelector";
 import { ErrorSnackbar, Header } from "common/components";
-import { authThunks } from "../store/auth-reducer";
+import { authThunks } from "store/auth-reducer";
 
 function App() {
   const isInitialized = useSelector(selectIsInitialized);

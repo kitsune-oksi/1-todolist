@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ERequestStatus } from "common/enums/enums";
+import { ERequestStatus } from "common/enums";
 import { appActions } from "store/app-reducer";
 import { AppDispatch } from "store/store";
 

@@ -1,5 +1,5 @@
 import { TodolistDomainType, todolistReducer, todolistThunks } from "store/todolist-reducer";
-import { ERequestStatus, ETaskPriorities, ETaskStatuses } from "common/enums/enums";
+import { ERequestStatus, ETaskPriorities, ETaskStatuses } from "common/enums";
 import { taskReducer, TasksStateType, taskThunks } from "store/tasks-reducer";
 
 let startState: TasksStateType;
