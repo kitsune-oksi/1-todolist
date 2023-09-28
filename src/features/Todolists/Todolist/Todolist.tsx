@@ -24,14 +24,14 @@ export const Todolist: React.FC<PropsType> = React.memo(({ id, title, filter, to
   const dispatch = useAppDispatch();
 
   if (filter === EFilterValueType.Active) {
-    tasks = tasks.filter((task) => task.status !== ETaskStatuses.New);
+    tasks = tasks.filter((task) => task.status !== ETaskStatuses.Completed);
   } else if (filter === EFilterValueType.Completed) {
-    tasks = tasks.filter((task) => task.status === ETaskStatuses.New);
+    tasks = tasks.filter((task) => task.status === ETaskStatuses.Completed);
   }
 
   const onClickFilterHandler = useCallback(
-    (nameButton: EFilterValueType) => {
-      dispatch(todolistActions.changeTodolistFilter({ todoListId: id, newFilter: nameButton }));
+    (newFilter: EFilterValueType) => {
+      dispatch(todolistActions.changeTodolistFilter({ todoListId: id, newFilter }));
     },
     [id],
   );
