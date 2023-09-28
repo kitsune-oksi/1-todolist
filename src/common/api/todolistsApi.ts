@@ -1,6 +1,6 @@
-import { BaseResponseType, instance } from "common/api/common.api";
+import { instance } from "common/api/common.api";
 import { NewDataType } from "store/tasks-reducer";
-import { ResponseTasks, TaskModelType, TaskType, TodolistType } from "common/api/TodolistTypes";
+import { BaseResponseType, ResponseTasks, TaskModelType, TaskType, TodolistType } from "common/api/commonTypes";
 
 export const todolistAPI = {
   updateTodolist(todolistId: string, title: string) {

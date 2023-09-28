@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
 import { todolistAPI } from "common/api/todolistsApi";
 import { taskThunks } from "store/tasks-reducer";
-import { TodolistType } from "common/api/TodolistTypes";
+import { TodolistType } from "common/api/commonTypes";
 
 const slice = createSlice({
   name: "todolist",
