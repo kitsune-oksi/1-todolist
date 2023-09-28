@@ -4,7 +4,8 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { todolistActions, todolistThunks } from "store/todolist-reducer";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
 import { todolistAPI } from "common/api/todolistsApi";
-import { TaskModelType, TaskType } from "common/api/TodolistTypes";
+import { TaskModelType, TaskType } from "common/api/commonTypes";
+import { thunkTryCatch } from "common/utils/thunk-try-catch";
 
 const slice = createSlice({
   name: "task",
@@ -87,8 +88,8 @@ const setTasks = createAppAsyncThunk<{ todolistId: string; tasks: TaskType[] }, 
 const addTask = createAppAsyncThunk<TaskType, { todolistId: string; titleNewTask: string }>(
   "tasks/addTask",
   async (param: { todolistId: string; titleNewTask: string }, thunkAPI) => {
-    const { dispatch, rejectWithValue } = thunkAPI;
-    try {
+    const { dispatch } = thunkAPI;
+    return thunkTryCatch(thunkAPI, async () => {
       dispatch(appActions.setAppStatus({ status: ERequestStatus.loading }));
       const res = await todolistAPI.createTask(param.todolistId, param.titleNewTask);
       dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
@@ -108,10 +109,7 @@ const addTask = createAppAsyncThunk<TaskType, { todolistId: string; titleNewTask
         entityStatus: ERequestStatus.succeeded,
       };
       return task;
-    } catch (e) {
-      handleServerNetworkError(e, dispatch);
-      return rejectWithValue(null);
-    }
+    });
   },
 );
 const updateTask = createAppAsyncThunk<

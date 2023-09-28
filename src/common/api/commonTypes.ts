@@ -1,4 +1,4 @@
-import { ERequestStatus, ETaskPriorities, ETaskStatuses } from "common/enums";
+import { ERequestStatus, EResultCode, ETaskPriorities, ETaskStatuses } from "common/enums";
 
 export type TodolistType = {
   id: string;
@@ -31,4 +31,14 @@ export type TaskModelType = {
   priority: ETaskPriorities;
   startDate: string;
   deadline: string;
+};
+export type BaseResponseType<D = {}> = {
+  resultCode: EResultCode;
+  messages: string[];
+  data: D;
+  fieldsErrors: FieldErrorType[];
+};
+export type FieldErrorType = {
+  error: string;
+  field: string;
 };

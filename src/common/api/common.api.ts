@@ -1,5 +1,4 @@
 import axios from "axios";
-import { EResultCode } from "common/enums";
 
 export const instance = axios.create({
   baseURL: "https://social-network.samuraijs.com/api/1.1/",
@@ -8,10 +7,3 @@ export const instance = axios.create({
     "API-KEY": "1690be4a-0b2f-42a4-9e71-302df103dbfe",
   },
 });
-
-//types
-export type BaseResponseType<D = {}> = {
-  resultCode: EResultCode;
-  messages: Array<string>;
-  data: D;
-};

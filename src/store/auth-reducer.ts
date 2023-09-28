@@ -11,9 +11,6 @@ const slice = createSlice({
     isInitialized: false,
   },
   reducers: {
-    setIsLoggedIn: (state, action: PayloadAction<{ isLoggedIn: boolean }>) => {
-      state.isLoggedIn = action.payload.isLoggedIn;
-    },
     setIsInitialized: (state, action: PayloadAction<{ isInitialized: boolean }>) => {
       state.isInitialized = action.payload.isInitialized;
     },
@@ -39,8 +36,7 @@ const login = createAppAsyncThunk<undefined, LoginDataType>(
     param: {
       email: string;
       password: string;
-      rememberMe?: boolean;
-      captcha?: boolean;
+      rememberMe: boolean;
     },
     thunkAPI,
   ) => {
@@ -52,8 +48,9 @@ const login = createAppAsyncThunk<undefined, LoginDataType>(
         dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
         return;
       } else {
-        handleServerAppError(res.data, dispatch);
-        return rejectWithValue(null);
+        const isShowAppError = !res.data.fieldsErrors.length;
+        handleServerAppError(res.data, dispatch, isShowAppError);
+        return rejectWithValue(res.data);
       }
     } catch (e) {
       handleServerNetworkError(e, dispatch);
@@ -67,7 +64,6 @@ const logout = createAppAsyncThunk<undefined>("auth/logout", async (_, thunkAPI)
     dispatch(appActions.setAppStatus({ status: ERequestStatus.loading }));
     const res = await authAPI.logout();
     if (res.data.resultCode === EResultCode.success) {
-      dispatch(authActions.setIsLoggedIn({ isLoggedIn: false }));
       dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
       return;
     } else {
@@ -88,7 +84,7 @@ const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }>("auth/initial
       dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
       return { isLoggedIn: true };
     } else {
-      handleServerAppError(res.data, dispatch);
+      handleServerAppError(res.data, dispatch, false);
       return rejectWithValue(null);
     }
   } catch (e) {
@@ -107,6 +103,5 @@ export const authThunks = { login, initializeApp, logout };
 export type LoginDataType = {
   email: string;
   password: string;
-  rememberMe?: boolean;
-  captcha?: boolean;
+  rememberMe: boolean;
 };

@@ -1,5 +1,6 @@
 import { LoginDataType } from "store/auth-reducer";
-import { BaseResponseType, instance } from "common/api/common.api";
+import { instance } from "common/api/common.api";
+import { BaseResponseType } from "common/api/commonTypes";
 
 export const authAPI = {
   login(values: LoginDataType) {

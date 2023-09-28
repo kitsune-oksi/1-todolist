@@ -6,7 +6,7 @@ import { taskThunks } from "store/tasks-reducer";
 import { ERequestStatus, ETaskStatuses } from "common/enums";
 import { useAppDispatch } from "store/store.hooks/store.hooks";
 import { EditableSpan } from "common/components";
-import { TaskType } from "common/api/TodolistTypes";
+import { TaskType } from "common/api/commonTypes";
 
 type TaskProps = {
   task: TaskType;
