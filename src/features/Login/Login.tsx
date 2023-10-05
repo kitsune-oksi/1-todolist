@@ -8,19 +8,21 @@ import FormLabel from "@mui/material/FormLabel";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Formik, FormikHelpers, FormikValues } from "formik";
-import { useAppDispatch } from "store/store.hooks/store.hooks";
+import { useAppDispatch } from "store/store.hooks";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { selectIsLoggedIn } from "features/Login/loginSelector";
-import { authThunks, LoginDataType } from "store/auth-reducer";
-import { BaseResponseType } from "common/api/commonTypes";
+import { authThunks } from "store/auth-reducer";
+import { BaseResponse, LoginData } from "common/api";
+import { selectIsLoggedIn } from "features/Login";
 
-export const Login = () => {
+type FormikError = Partial<LoginData>;
+
+export const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
   const validateHandler = (values: FormikValues) => {
-    const errors: FormikErrorType = {};
+    const errors: FormikError = {};
     if (!values.email) {
       errors.email = "Required";
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
@@ -33,14 +35,14 @@ export const Login = () => {
     }
     return errors;
   };
-  const onSubmitHandler = (values: LoginDataType, FormikHelpers: FormikHelpers<LoginDataType>) => {
+  const onSubmitHandler = (values: LoginData, FormikHelpers: FormikHelpers<LoginData>) => {
     const { setFieldError, resetForm } = FormikHelpers;
     dispatch(authThunks.login(values))
       .unwrap()
       .then(() => {
         resetForm();
       })
-      .catch((data: BaseResponseType) => {
+      .catch((data: BaseResponse) => {
         const { fieldsErrors } = data;
         if (fieldsErrors) {
           fieldsErrors.forEach(({ field, error }) => {
@@ -109,10 +111,4 @@ export const Login = () => {
       </Grid>
     </Grid>
   );
-};
-
-type FormikErrorType = {
-  email?: string;
-  password?: string;
-  rememberMe?: boolean;
 };

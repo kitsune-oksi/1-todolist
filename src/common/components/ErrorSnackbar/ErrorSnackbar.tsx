@@ -1,16 +1,16 @@
 import React from "react";
-import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "store/store.hooks/store.hooks";
+import { useAppDispatch } from "store/store.hooks";
 import { appActions } from "store/app-reducer";
-import { selectError } from "App/appSelectors";
+import { selectError } from "App";
+import { Snackbar } from "@mui/material";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-export function ErrorSnackbar() {
+export const ErrorSnackbar: React.FC = () => {
   const error = useSelector(selectError);
   const dispatch = useAppDispatch();
 
@@ -24,4 +24,4 @@ export function ErrorSnackbar() {
       </Alert>
     </Snackbar>
   );
-}
+};

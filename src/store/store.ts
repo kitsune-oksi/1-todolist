@@ -6,6 +6,9 @@ import { appReducer } from "./app-reducer";
 import { authReducer } from "./auth-reducer";
 import { configureStore } from "@reduxjs/toolkit";
 
+export type AppRootState = ReturnType<typeof store.getState>;
+export type AppDispatch = ThunkDispatch<AppRootState, unknown, AnyAction>;
+
 export const store = configureStore({
   reducer: {
     todolist: todolistReducer,
@@ -15,7 +18,3 @@ export const store = configureStore({
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk),
 });
-
-//types
-export type AppRootStateType = ReturnType<typeof store.getState>;
-export type AppDispatch = ThunkDispatch<AppRootStateType, unknown, AnyAction>;

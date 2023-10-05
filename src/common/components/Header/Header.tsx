@@ -1,19 +1,13 @@
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import { useSelector } from "react-redux";
 import { authThunks } from "store/auth-reducer";
-import { useAppDispatch } from "store/store.hooks/store.hooks";
-import { LinearProgress } from "@mui/material";
-import { selectStatus } from "App/appSelectors";
-import { selectIsLoggedIn } from "features/Login/loginSelector";
+import { useAppDispatch } from "store/store.hooks";
+import { AppBar, Box, Button, IconButton, LinearProgress, Toolbar, Typography } from "@mui/material";
+import { selectStatus } from "App";
+import { selectIsLoggedIn } from "features/Login";
 
-export function Header() {
+export const Header: React.FC = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const status = useSelector(selectStatus);
   const dispatch = useAppDispatch();
@@ -38,4 +32,4 @@ export function Header() {
       </AppBar>
     </Box>
   );
-}
+};

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { ERequestStatus, ETaskPriorities, ETaskStatuses } from "common/enums";
-import { Task } from "features/Todolists/Task/Task";
+import { Task } from "features/Todolists/Todolist/Tasks/Task/Task";
 import { ReduxStoreProviderDecorator } from "./decorators/ReduxStoreProviderDecorator";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export

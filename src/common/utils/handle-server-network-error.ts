@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ERequestStatus } from "common/enums";
 import { appActions } from "store/app-reducer";
-import { AppDispatch } from "store/store";
+import { AppDispatch } from "store";
 
 export const handleServerNetworkError = (err: unknown, dispatch: AppDispatch): void => {
   let errorMessage = "Some error occurred";

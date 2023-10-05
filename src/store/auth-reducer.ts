@@ -2,7 +2,8 @@ import { appActions } from "./app-reducer";
 import { ERequestStatus, EResultCode } from "common/enums";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
-import { authAPI } from "common/api/authApi";
+import { authAPI, LoginData } from "common/api";
+import { todolistActions } from "store/todolist-reducer";
 
 const slice = createSlice({
   name: "auth",
@@ -30,7 +31,7 @@ const slice = createSlice({
 });
 
 // thunks
-const login = createAppAsyncThunk<undefined, LoginDataType>(
+const login = createAppAsyncThunk<undefined, LoginData>(
   "auth/login",
   async (
     param: {
@@ -65,6 +66,7 @@ const logout = createAppAsyncThunk<undefined>("auth/logout", async (_, thunkAPI)
     const res = await authAPI.logout();
     if (res.data.resultCode === EResultCode.success) {
       dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
+      dispatch(todolistActions.clearTodolistsData());
       return;
     } else {
       handleServerAppError(res.data, dispatch);
@@ -98,10 +100,3 @@ const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }>("auth/initial
 export const authReducer = slice.reducer;
 export const authActions = slice.actions;
 export const authThunks = { login, initializeApp, logout };
-
-// types
-export type LoginDataType = {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-};

@@ -1,17 +1,17 @@
 import { ERequestStatus, EResultCode, ETaskPriorities, ETaskStatuses } from "common/enums";
 
-export type TodolistType = {
+export type Todolist = {
   id: string;
   addedDate: string;
   order: number;
   title: string;
 };
-export type ResponseTasks = {
-  items: TaskType[];
+export type ResponseGetTasks = {
+  items: Task[];
   totalCount: number;
   error: null | string;
 };
-export type TaskType = {
+export type Task = {
   description: string;
   title: string;
   status: ETaskStatuses;
@@ -24,21 +24,19 @@ export type TaskType = {
   addedDate: string;
   entityStatus: ERequestStatus;
 };
-export type TaskModelType = {
-  title: string;
-  description: string;
-  status: ETaskStatuses;
-  priority: ETaskPriorities;
-  startDate: string;
-  deadline: string;
-};
-export type BaseResponseType<D = {}> = {
+export type TaskModel = Pick<Task, "title" | "description" | "status" | "priority" | "startDate" | "deadline">;
+export type BaseResponse<D = {}> = {
   resultCode: EResultCode;
   messages: string[];
   data: D;
-  fieldsErrors: FieldErrorType[];
+  fieldsErrors: FieldError[];
 };
-export type FieldErrorType = {
+export type FieldError = {
   error: string;
   field: string;
+};
+export type LoginData = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
 };

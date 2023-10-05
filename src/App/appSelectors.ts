@@ -1,4 +1,4 @@
-import { AppRootStateType } from "store/store";
+import { AppRootState } from "store";
 
-export const selectError = (state: AppRootStateType) => state.app.error;
-export const selectStatus = (state: AppRootStateType) => state.app.status;
+export const selectError = (state: AppRootState) => state.app.error;
+export const selectStatus = (state: AppRootState) => state.app.status;
