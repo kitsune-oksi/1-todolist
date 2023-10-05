@@ -1,28 +1,27 @@
 import React, { ChangeEvent, KeyboardEvent, useCallback, useState } from "react";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import { IconButton, TextField } from "@mui/material";
 
-type AddItemFormPropsType = {
+type Props = {
   addItem: (title: string) => void;
   disabled?: boolean;
 };
 
-export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
+export const AddItemForm: React.FC<Props> = React.memo(({ addItem, disabled }) => {
   const [title, setTitle] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const addItem = useCallback(() => {
+  const addItemHandler = useCallback(() => {
     const newTitle = title.trim();
     if (newTitle) {
-      props.addItem(title);
+      addItem(title);
       setTitle("");
     } else {
       setError("Title is required!");
     }
   }, [title, setTitle]);
 
-  const onChangeInputHandler = useCallback(
+  const setTitleHandler = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => setTitle(event.currentTarget.value),
     [setTitle],
   );
@@ -30,13 +29,13 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
   const onKeyPressHandler = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key === "Enter") {
-        addItem();
+        addItemHandler();
       }
       if (error) {
         setError(null);
       }
     },
-    [error, addItem, setError],
+    [error, addItemHandler, setError],
   );
 
   return (
@@ -44,13 +43,13 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
       <TextField
         variant={"standard"}
         value={title}
-        onChange={onChangeInputHandler}
+        onChange={setTitleHandler}
         onKeyDown={onKeyPressHandler}
         error={!!error}
         label={"Title"}
         helperText={error}
       />
-      <IconButton color="primary" aria-label="add a task" onClick={addItem} disabled={props.disabled}>
+      <IconButton color="primary" aria-label="add a task" onClick={addItemHandler} disabled={disabled}>
         <AddBoxIcon />
       </IconButton>
     </div>

@@ -1,17 +1,17 @@
+import { TextField } from "@mui/material";
 import React, { ChangeEvent, useCallback, useState } from "react";
-import TextField from "@mui/material/TextField";
-import { useAppDispatch } from "store/store.hooks/store.hooks";
-import { taskThunks } from "../../../store/tasks-reducer";
-import { todolistThunks } from "../../../store/todolist-reducer";
+import { useAppDispatch } from "store/store.hooks";
+import { taskThunks } from "store/tasks-reducer";
+import { todolistThunks } from "store/todolist-reducer";
 
-type EditableSpanPropsType = {
+type Props = {
   value: string;
   taskId?: string;
   todolistId: string;
   disabled: boolean;
 };
 
-export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({ value, taskId, todolistId, disabled }) => {
+export const EditableSpan: React.FC<Props> = React.memo(({ value, taskId, todolistId, disabled }) => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [title, setTitle] = useState<string>(value);
 
@@ -31,7 +31,6 @@ export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({ value
               },
             }),
           );
-          console.log("=====>title", title);
         } else {
           dispatch(todolistThunks.changeTodolistTitle({ newTodolistTitle: title, todoListId: todolistId }));
         }
@@ -39,7 +38,7 @@ export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({ value
     }
   }, [taskId, todolistId, editMode, title, disabled]);
 
-  const onChangeHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+  const setTitleHandler = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setTitle(event.currentTarget.value);
   }, []);
 
@@ -51,7 +50,7 @@ export const EditableSpan: React.FC<EditableSpanPropsType> = React.memo(({ value
           value={title}
           autoFocus
           onBlur={activateEditMode}
-          onChange={onChangeHandler}
+          onChange={setTitleHandler}
           size={"small"}
         />
       ) : (

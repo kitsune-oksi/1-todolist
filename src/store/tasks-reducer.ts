@@ -1,15 +1,17 @@
-import { ERequestStatus, EResultCode, ETaskPriorities, ETaskStatuses } from "common/enums";
+import { ERequestStatus, EResultCode } from "common/enums";
 import { appActions } from "store/app-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { todolistActions, todolistThunks } from "store/todolist-reducer";
-import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
-import { todolistAPI } from "common/api/todolistsApi";
-import { TaskModelType, TaskType } from "common/api/commonTypes";
-import { thunkTryCatch } from "common/utils/thunk-try-catch";
+import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError, thunkTryCatch } from "common/utils";
+import { todolistAPI } from "common/api";
+import { TaskModel, Task } from "common/api";
+
+export type TaskInitialState = Record<string, Task[]>;
+type NewData = Partial<Pick<Task, "title" | "description" | "status" | "priority" | "startDate" | "deadline">>;
 
 const slice = createSlice({
   name: "task",
-  initialState: {} as TasksStateType,
+  initialState: {} as TaskInitialState,
   reducers: {
     changeTaskEntityStatus: (
       state,
@@ -69,8 +71,8 @@ const slice = createSlice({
 // 2. ThunkArg - аргументы санки (тип, который санка принимает)
 // 3. AsyncThunkConfig. Какие есть поля смотрим в доке.
 // rejectValue - Используем для типизации возвращаемой ошибки
-// state - используем для типизации App. Когда используем getState
-const setTasks = createAppAsyncThunk<{ todolistId: string; tasks: TaskType[] }, string>(
+// store - используем для типизации App. Когда используем getState
+const setTasks = createAppAsyncThunk<{ todolistId: string; tasks: Task[] }, string>(
   "tasks/fetchTasks",
   async (todolistId, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI;
@@ -85,7 +87,7 @@ const setTasks = createAppAsyncThunk<{ todolistId: string; tasks: TaskType[] }, 
     }
   },
 );
-const addTask = createAppAsyncThunk<TaskType, { todolistId: string; titleNewTask: string }>(
+const addTask = createAppAsyncThunk<Task, { todolistId: string; titleNewTask: string }>(
   "tasks/addTask",
   async (param: { todolistId: string; titleNewTask: string }, thunkAPI) => {
     const { dispatch } = thunkAPI;
@@ -95,7 +97,7 @@ const addTask = createAppAsyncThunk<TaskType, { todolistId: string; titleNewTask
       dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
       const { description, title, status, priority, startDate, deadline, id, todoListId, order, addedDate } =
         res.data.data.item;
-      const task: TaskType = {
+      const task: Task = {
         description,
         title,
         status,
@@ -113,9 +115,9 @@ const addTask = createAppAsyncThunk<TaskType, { todolistId: string; titleNewTask
   },
 );
 const updateTask = createAppAsyncThunk<
-  { todolistId: string; taskId: string; model: TaskModelType },
-  { todolistId: string; taskId: string; newData: NewDataType }
->("tasks/updateTask", async (param: { todolistId: string; taskId: string; newData: NewDataType }, thunkAPI) => {
+  { todolistId: string; taskId: string; model: TaskModel },
+  { todolistId: string; taskId: string; newData: NewData }
+>("tasks/updateTask", async (param: { todolistId: string; taskId: string; newData: NewData }, thunkAPI) => {
   const { dispatch, rejectWithValue, getState } = thunkAPI;
   try {
     const tasks = getState().tasks;
@@ -124,7 +126,7 @@ const updateTask = createAppAsyncThunk<
       dispatch(appActions.setAppError({ error: "Task not found" }));
       return rejectWithValue(null);
     }
-    const model: TaskModelType = {
+    const model: TaskModel = {
       title: task.title,
       description: task.description,
       status: task.status,
@@ -206,16 +208,3 @@ const removeTask = createAppAsyncThunk<{ taskId: string; todolistId: string }, {
 export const taskReducer = slice.reducer;
 export const taskActions = slice.actions;
 export const taskThunks = { setTasks, addTask, updateTask, removeTask };
-
-// types
-export type TasksStateType = {
-  [key: string]: TaskType[];
-};
-export type NewDataType = {
-  title?: string;
-  description?: string;
-  status?: ETaskStatuses;
-  priority?: ETaskPriorities;
-  startDate?: string;
-  deadline?: string;
-};

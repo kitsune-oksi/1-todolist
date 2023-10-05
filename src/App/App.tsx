@@ -1,17 +1,16 @@
 import React, { useEffect, useRef } from "react";
 import "./App.css";
-import Container from "@mui/material/Container";
-import { TodolistsList } from "features/Todolists/TodolistsList";
-import { CircularProgress } from "@mui/material";
+import { TodolistsList } from "features/Todolists";
+import { CircularProgress, Container } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Login } from "features/Login/Login";
-import { useAppDispatch } from "store/store.hooks/store.hooks";
-import { selectIsInitialized } from "features/Login/loginSelector";
+import { Login } from "features/Login";
+import { useAppDispatch } from "store/store.hooks";
+import { selectIsInitialized } from "features/Login";
 import { ErrorSnackbar, Header } from "common/components";
 import { authThunks } from "store/auth-reducer";
 
-function App() {
+export const App: React.FC = () => {
   const isInitialized = useSelector(selectIsInitialized);
   const dispatch = useAppDispatch();
   const refFirstRender = useRef(true);
@@ -45,6 +44,4 @@ function App() {
       </Container>
     </div>
   );
-}
-
-export default App;
+};

@@ -1,13 +1,13 @@
 import { v1 } from "uuid";
-import { todolistActions, TodolistDomainType, todolistReducer, todolistThunks } from "store/todolist-reducer";
-import { EFilterValueType, ERequestStatus } from "common/enums";
+import { todolistActions, TodolistInitialState, todolistReducer, todolistThunks } from "store/todolist-reducer";
+import { EFilterValue, ERequestStatus } from "common/enums";
 
 let todolistId1: string;
 let todolistId2: string;
-let startState: Array<TodolistDomainType>;
+let startState: Array<TodolistInitialState>;
 let newTodolistTitle: string;
 let todoListId: string;
-let newFilter: EFilterValueType;
+let newFilter: EFilterValue;
 
 beforeEach(() => {
   todolistId1 = v1();
@@ -16,7 +16,7 @@ beforeEach(() => {
     {
       id: todolistId1,
       title: "What to learn",
-      filter: EFilterValueType.All,
+      filter: EFilterValue.All,
       order: 0,
       addedDate: "",
       entityStatus: ERequestStatus.idle,
@@ -24,7 +24,7 @@ beforeEach(() => {
     {
       id: todolistId2,
       title: "What to buy",
-      filter: EFilterValueType.All,
+      filter: EFilterValue.All,
       order: 1,
       addedDate: "",
       entityStatus: ERequestStatus.idle,
@@ -32,7 +32,7 @@ beforeEach(() => {
   ];
   newTodolistTitle = "New Todolist";
   todoListId = todolistId2;
-  newFilter = EFilterValueType.Completed;
+  newFilter = EFilterValue.Completed;
 });
 
 test("correct todolist should be removed", () => {

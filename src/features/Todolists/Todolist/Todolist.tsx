@@ -1,44 +1,21 @@
 import React, { useCallback } from "react";
-import "App/App.css";
-import Button, { ButtonProps } from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { todolistActions, todolistThunks } from "store/todolist-reducer";
-import { Task } from "features/Todolists/Task/Task";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "store/store.hooks/store.hooks";
-import { selectTask } from "features/Todolists/Task/taskSelector";
+import { useAppDispatch } from "store/store.hooks";
 import { taskThunks } from "store/tasks-reducer";
-import { AddItemForm, EditableSpan } from "common/components";
-import { EFilterValueType, ERequestStatus, ETaskStatuses } from "common/enums";
+import { AddItemForm } from "common/components";
+import { EFilterValue, ERequestStatus } from "common/enums";
+import { TodolistTitle } from "features/Todolists/Todolist/TodolistTitle/TodolistTitle";
+import { TodolistFilterButtons } from "features/Todolists/Todolist/TodolistFilterButtons/TodolistFilterButtons";
+import { Tasks } from "features/Todolists/Todolist/Tasks/Tasks";
 
-type PropsType = {
+type Props = {
   id: string;
   title: string;
-  filter: EFilterValueType;
+  filter: EFilterValue;
   todolistEntityStatus: ERequestStatus;
 };
 
-export const Todolist: React.FC<PropsType> = React.memo(({ id, title, filter, todolistEntityStatus }) => {
-  let tasks = useSelector(selectTask(id));
+export const Todolist: React.FC<Props> = React.memo(({ id, title, filter, todolistEntityStatus }) => {
   const dispatch = useAppDispatch();
-
-  if (filter === EFilterValueType.Active) {
-    tasks = tasks.filter((task) => task.status !== ETaskStatuses.Completed);
-  } else if (filter === EFilterValueType.Completed) {
-    tasks = tasks.filter((task) => task.status === ETaskStatuses.Completed);
-  }
-
-  const onClickFilterHandler = useCallback(
-    (newFilter: EFilterValueType) => {
-      dispatch(todolistActions.changeTodolistFilter({ todoListId: id, newFilter }));
-    },
-    [id],
-  );
-
-  const removeTodoListHandler = useCallback((id: string) => {
-    dispatch(todolistThunks.removeTodolist(id));
-  }, []);
 
   const addTaskHandler = useCallback(
     (title: string) => {
@@ -49,58 +26,10 @@ export const Todolist: React.FC<PropsType> = React.memo(({ id, title, filter, to
 
   return (
     <div>
-      <h3>
-        <EditableSpan value={title} todolistId={id} disabled={todolistEntityStatus === "loading"} />
-        <IconButton
-          aria-label="delete"
-          onClick={() => removeTodoListHandler(id)}
-          disabled={todolistEntityStatus === "loading"}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </h3>
-      <AddItemForm addItem={addTaskHandler} disabled={todolistEntityStatus === "loading"} />
-      <ul style={{ listStyleType: "none" }}>
-        {tasks.map((task) => {
-          return (
-            <Task
-              key={task.id}
-              task={task}
-              todolistId={id}
-              todolistEntityStatus={todolistEntityStatus}
-              taskEntityStatus={task.entityStatus}
-            />
-          );
-        })}
-      </ul>
-      <div>
-        <ButtonWithMemo
-          onClick={useCallback(() => onClickFilterHandler(EFilterValueType.All), [])}
-          variant={filter === EFilterValueType.All ? "outlined" : "text"}
-          color={"inherit"}
-          title={EFilterValueType.All}
-        />
-        <ButtonWithMemo
-          onClick={useCallback(() => onClickFilterHandler(EFilterValueType.Active), [])}
-          variant={filter === EFilterValueType.Active ? "outlined" : "text"}
-          color={"primary"}
-          title={EFilterValueType.Active}
-        />
-        <ButtonWithMemo
-          onClick={useCallback(() => onClickFilterHandler(EFilterValueType.Completed), [])}
-          variant={filter === EFilterValueType.Completed ? "outlined" : "text"}
-          color={"secondary"}
-          title={EFilterValueType.Completed}
-        />
-      </div>
+      <TodolistTitle id={id} todolistEntityStatus={todolistEntityStatus} title={title} />
+      <AddItemForm addItem={addTaskHandler} disabled={todolistEntityStatus === ERequestStatus.loading} />
+      <Tasks filter={filter} todolistEntityStatus={todolistEntityStatus} id={id} />
+      <TodolistFilterButtons id={id} filter={filter} />
     </div>
-  );
-});
-
-const ButtonWithMemo: React.FC<ButtonProps> = React.memo(({ onClick, variant, color, title }) => {
-  return (
-    <Button onClick={onClick} variant={variant} color={color}>
-      {title}
-    </Button>
   );
 });

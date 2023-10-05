@@ -1,10 +1,10 @@
-import { TodolistDomainType, todolistReducer, todolistThunks } from "store/todolist-reducer";
+import { TodolistInitialState, todolistReducer, todolistThunks } from "store/todolist-reducer";
 import { ERequestStatus, ETaskPriorities, ETaskStatuses } from "common/enums";
-import { taskReducer, TasksStateType, taskThunks } from "store/tasks-reducer";
+import { taskReducer, TaskInitialState, taskThunks } from "store/tasks-reducer";
 
-let startState: TasksStateType;
-let startTasksState: TasksStateType;
-let startTodolistsState: Array<TodolistDomainType>;
+let startState: TaskInitialState;
+let startTasksState: TaskInitialState;
+let startTodolistsState: Array<TodolistInitialState>;
 
 beforeEach(() => {
   startState = {

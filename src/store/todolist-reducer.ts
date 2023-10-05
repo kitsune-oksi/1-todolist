@@ -1,17 +1,22 @@
-import { EFilterValueType, ERequestStatus, EResultCode } from "common/enums";
+import { EFilterValue, ERequestStatus, EResultCode } from "common/enums";
 import { appActions } from "store/app-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
-import { todolistAPI } from "common/api/todolistsApi";
+import { todolistAPI } from "common/api";
 import { taskThunks } from "store/tasks-reducer";
-import { TodolistType } from "common/api/commonTypes";
-import { thunkTryCatch } from "common/utils/thunk-try-catch";
+import { Todolist } from "common/api";
+import { thunkTryCatch } from "common/utils";
+
+export type TodolistInitialState = Todolist & {
+  filter: EFilterValue;
+  entityStatus: ERequestStatus;
+};
 
 const slice = createSlice({
   name: "todolist",
-  initialState: [] as TodolistDomainType[],
+  initialState: [] as TodolistInitialState[],
   reducers: {
-    changeTodolistFilter: (state, action: PayloadAction<{ todoListId: string; newFilter: EFilterValueType }>) => {
+    changeTodolistFilter: (state, action: PayloadAction<{ todoListId: string; newFilter: EFilterValue }>) => {
       const index = state.findIndex((tl) => tl.id === action.payload.todoListId);
       if (index !== -1) {
         state[index].filter = action.payload.newFilter;
@@ -33,7 +38,7 @@ const slice = createSlice({
         action.payload.forEach((tl) =>
           state.push({
             ...tl,
-            filter: EFilterValueType.All,
+            filter: EFilterValue.All,
             entityStatus: ERequestStatus.idle,
           }),
         );
@@ -47,7 +52,7 @@ const slice = createSlice({
       .addCase(addTodolist.fulfilled, (state, action) => {
         state.unshift({
           ...action.payload,
-          filter: EFilterValueType.All,
+          filter: EFilterValue.All,
           entityStatus: ERequestStatus.idle,
         });
       })
@@ -61,7 +66,7 @@ const slice = createSlice({
 });
 
 //thunks
-const setTodolists = createAppAsyncThunk<Array<TodolistType>>("todolists/setTodolists", async (_, thunkAPI) => {
+const setTodolists = createAppAsyncThunk<Array<Todolist>>("todolists/setTodolists", async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
   try {
     dispatch(appActions.setAppStatus({ status: ERequestStatus.loading }));
@@ -92,7 +97,7 @@ const removeTodolist = createAppAsyncThunk<string, string>(
     }
   },
 );
-const addTodolist = createAppAsyncThunk<TodolistType, string>(
+const addTodolist = createAppAsyncThunk<Todolist, string>(
   "todolists/addTodolist",
   async (newTodolistTitle, thunkAPI) => {
     const { dispatch, rejectWithValue } = thunkAPI;
@@ -152,9 +157,3 @@ const changeTodolistTitle = createAppAsyncThunk<
 export const todolistReducer = slice.reducer;
 export const todolistActions = slice.actions;
 export const todolistThunks = { setTodolists, removeTodolist, addTodolist, changeTodolistTitle };
-
-//types
-export type TodolistDomainType = TodolistType & {
-  filter: EFilterValueType;
-  entityStatus: ERequestStatus;
-};
