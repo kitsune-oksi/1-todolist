@@ -17,7 +17,7 @@ export const TodolistsList: React.FC = () => {
   const refFirstRender = useRef(true);
 
   const addTodoList = useCallback((title: string) => {
-    dispatch(todolistThunks.addTodolist(title));
+    return dispatch(todolistThunks.addTodolist(title)).unwrap();
   }, []);
 
   useEffect(() => {

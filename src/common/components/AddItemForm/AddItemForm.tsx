@@ -1,9 +1,10 @@
 import React, { ChangeEvent, KeyboardEvent, useCallback, useState } from "react";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import { IconButton, TextField } from "@mui/material";
+import { BaseResponse } from "common/api";
 
 type Props = {
-  addItem: (title: string) => void;
+  addItem: (title: string) => Promise<any>;
   disabled?: boolean;
 };
 
@@ -14,8 +15,15 @@ export const AddItemForm: React.FC<Props> = React.memo(({ addItem, disabled }) =
   const addItemHandler = useCallback(() => {
     const newTitle = title.trim();
     if (newTitle) {
-      addItem(title);
-      setTitle("");
+      addItem(title)
+        .then(() => {
+          setTitle("");
+        })
+        .catch((e: BaseResponse) => {
+          if (e?.resultCode) {
+            setError(e.messages[0]);
+          }
+        });
     } else {
       setError("Title is required!");
     }

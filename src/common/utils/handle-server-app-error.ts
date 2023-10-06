@@ -1,6 +1,5 @@
 import { AppDispatch } from "store";
 import { appActions } from "store/app-reducer";
-import { ERequestStatus } from "common/enums";
 import { BaseResponse } from "common/api";
 
 /**
@@ -13,5 +12,4 @@ export const handleServerAppError = <T>(data: BaseResponse<T>, dispatch: AppDisp
   if (showError) {
     dispatch(appActions.setAppError({ error: data.messages.length ? data.messages[0] : "Some error occurred" }));
   }
-  dispatch(appActions.setAppStatus({ status: ERequestStatus.failed }));
 };

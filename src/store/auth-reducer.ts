@@ -1,7 +1,6 @@
-import { appActions } from "./app-reducer";
-import { ERequestStatus, EResultCode } from "common/enums";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from "common/utils";
+import { EResultCode } from "common/enums";
+import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
+import { createAppAsyncThunk } from "common/utils";
 import { authAPI, LoginData } from "common/api";
 import { todolistActions } from "store/todolist-reducer";
 
@@ -17,21 +16,17 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(login.fulfilled, (state) => {
-        state.isLoggedIn = true;
-      })
-      .addCase(logout.fulfilled, (state) => {
-        state.isLoggedIn = false;
-      })
-      .addCase(initializeApp.fulfilled, (state, action) => {
+    builder.addMatcher(
+      isAnyOf(authThunks.login.fulfilled, authThunks.logout.fulfilled, authThunks.initializeApp.fulfilled),
+      (state, action) => {
         state.isLoggedIn = action.payload.isLoggedIn;
-      });
+      },
+    );
   },
 });
 
 // thunks
-const login = createAppAsyncThunk<undefined, LoginData>(
+const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginData>(
   "auth/login",
   async (
     param: {
@@ -41,59 +36,33 @@ const login = createAppAsyncThunk<undefined, LoginData>(
     },
     thunkAPI,
   ) => {
-    const { dispatch, rejectWithValue } = thunkAPI;
-    try {
-      dispatch(appActions.setAppStatus({ status: ERequestStatus.loading }));
-      const res = await authAPI.login(param);
-      if (res.data.resultCode === EResultCode.success) {
-        dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
-        return;
-      } else {
-        const isShowAppError = !res.data.fieldsErrors.length;
-        handleServerAppError(res.data, dispatch, isShowAppError);
-        return rejectWithValue(res.data);
-      }
-    } catch (e) {
-      handleServerNetworkError(e, dispatch);
-      return rejectWithValue(null);
+    const { rejectWithValue } = thunkAPI;
+    const res = await authAPI.login(param);
+    if (res.data.resultCode === EResultCode.success) {
+      return { isLoggedIn: true };
+    } else {
+      return rejectWithValue(res.data);
     }
   },
 );
-const logout = createAppAsyncThunk<undefined>("auth/logout", async (_, thunkAPI) => {
+const logout = createAppAsyncThunk<{ isLoggedIn: boolean }>("auth/logout", async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
-  try {
-    dispatch(appActions.setAppStatus({ status: ERequestStatus.loading }));
-    const res = await authAPI.logout();
-    if (res.data.resultCode === EResultCode.success) {
-      dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
-      dispatch(todolistActions.clearTodolistsData());
-      return;
-    } else {
-      handleServerAppError(res.data, dispatch);
-      return rejectWithValue(null);
-    }
-  } catch (e) {
-    handleServerNetworkError(e, dispatch);
-    return rejectWithValue(null);
+  const res = await authAPI.logout();
+  if (res.data.resultCode === EResultCode.success) {
+    dispatch(todolistActions.clearTodolistsData());
+    return { isLoggedIn: false };
+  } else {
+    return rejectWithValue(res.data);
   }
 });
 const initializeApp = createAppAsyncThunk<{ isLoggedIn: boolean }>("auth/initializeApp", async (_, thunkAPI) => {
   const { dispatch, rejectWithValue } = thunkAPI;
-  try {
-    dispatch(appActions.setAppStatus({ status: ERequestStatus.loading }));
-    const res = await authAPI.me();
-    if (res.data.resultCode === EResultCode.success) {
-      dispatch(appActions.setAppStatus({ status: ERequestStatus.succeeded }));
-      return { isLoggedIn: true };
-    } else {
-      handleServerAppError(res.data, dispatch, false);
-      return rejectWithValue(null);
-    }
-  } catch (e) {
-    handleServerNetworkError(e, dispatch);
-    return rejectWithValue(null);
-  } finally {
-    dispatch(authActions.setIsInitialized({ isInitialized: true }));
+  const res = await authAPI.me();
+  dispatch(authActions.setIsInitialized({ isInitialized: true }));
+  if (res.data.resultCode === EResultCode.success) {
+    return { isLoggedIn: true };
+  } else {
+    return rejectWithValue(res.data);
   }
 });
 

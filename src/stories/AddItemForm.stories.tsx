@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { action } from "@storybook/addon-actions";
-import { AddItemForm } from "../common/components";
+import { AddItemForm } from "common/components";
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 const meta: Meta<typeof AddItemForm> = {
@@ -24,6 +23,6 @@ type Story = StoryObj<typeof AddItemForm>;
 export const AddItemFormStory: Story = {
   // More on args: https://storybook.js.org/docs/react/writing-stories/args
   args: {
-    addItem: action("Button clicked inside form"),
+    // addItem: Promise(action("Button clicked inside form")),
   },
 };
