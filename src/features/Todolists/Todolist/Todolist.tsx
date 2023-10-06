@@ -19,7 +19,7 @@ export const Todolist: React.FC<Props> = React.memo(({ id, title, filter, todoli
 
   const addTaskHandler = useCallback(
     (title: string) => {
-      dispatch(taskThunks.addTask({ todolistId: id, titleNewTask: title }));
+      return dispatch(taskThunks.addTask({ todolistId: id, titleNewTask: title })).unwrap();
     },
     [id, title],
   );

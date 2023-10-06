@@ -1,11 +1,9 @@
 import axios from "axios";
-import { ERequestStatus } from "common/enums";
 import { appActions } from "store/app-reducer";
 import { AppDispatch } from "store";
 
 export const handleServerNetworkError = (err: unknown, dispatch: AppDispatch): void => {
   let errorMessage = "Some error occurred";
-
   // ❗Проверка на наличие axios ошибки
   if (axios.isAxiosError(err)) {
     // ⏺️ err.response?.data?.message - например получение тасок с невалидной todolistId
@@ -20,5 +18,4 @@ export const handleServerNetworkError = (err: unknown, dispatch: AppDispatch): v
   }
 
   dispatch(appActions.setAppError({ error: errorMessage }));
-  dispatch(appActions.setAppStatus({ status: ERequestStatus.failed }));
 };
